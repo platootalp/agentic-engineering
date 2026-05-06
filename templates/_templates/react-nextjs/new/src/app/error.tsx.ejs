@@ -1,0 +1,13 @@
+---
+to: "<%= projectName %>/src/app/error.tsx"
+---
+'use client'
+
+export default function Error({ error }: { error: Error & { digest?: string } }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <h1 className="text-2xl font-bold">Something went wrong!</h1>
+      <p className="text-gray-600 mt-2">{error.message}</p>
+    </div>
+  )
+}
