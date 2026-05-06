@@ -10,7 +10,8 @@ from fastapi.responses import JSONResponse
 
 from app.config import Settings, get_settings
 from app.database import close_db, init_db
-from app.adapters.controllers import auth_router, jd_router, experience_router, resume_router
+from app.adapters.controllers import jd_router, experience_router, resume_router
+from app.modules.users.router import router as users_router
 from app.infrastructure.logging import get_logger, log_request, setup_logging
 
 logger = get_logger()
@@ -102,8 +103,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_routes(app)
     
     # Register API routes
-    # Register API routes
-    app.include_router(auth_router)
+    app.include_router(users_router)
     app.include_router(jd_router)
     app.include_router(experience_router)
     app.include_router(resume_router)
