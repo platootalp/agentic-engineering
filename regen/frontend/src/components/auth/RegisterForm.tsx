@@ -14,10 +14,13 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { registerSchema, type RegisterFormData } from '@/lib/validations/auth'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuthStore } from '@/stores/authStore'
+import { useNavigate } from 'react-router-dom'
 
 export function RegisterForm() {
-  const { register, isLoading } = useAuth()
+  const authRegister = useAuthStore((s) => s.register)
+  const isLoading = useAuthStore((s) => s.isLoading)
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -37,7 +40,8 @@ export function RegisterForm() {
     try {
       setError(null)
       const { confirmPassword, ...registerData } = data
-      await register(registerData)
+      await authRegister(registerData)
+      navigate('/dashboard')
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail?.message || 
                           err.response?.data?.detail || 

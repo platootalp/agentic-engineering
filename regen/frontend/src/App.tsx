@@ -12,11 +12,11 @@ import { ResumeList } from '@/pages/resumes/ResumeList'
 import { ResumeBuilder } from '@/pages/resumes/ResumeBuilder'
 import { ResumeDetail } from '@/pages/resumes/ResumeDetail'
 import HomePage from '@/pages/index'
-import { ProtectedRoute } from '@/components/common/ProtectedRoute'
-import { useAuthStore } from '@/stores/auth.store'
+import ProtectedRoute from '@/router/protected'
+import { useAuthStore } from '@/stores/authStore'
 
 function PublicRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useAuthStore()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />
   }
@@ -31,15 +31,17 @@ function App() {
           <Route index element={<HomePage />} />
           <Route path="login" element={<PublicRoute><LoginPage /></PublicRoute>} />
           <Route path="register" element={<PublicRoute><RegisterPage /></PublicRoute>} />
-          <Route path="dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="jobs" element={<ProtectedRoute><JobList /></ProtectedRoute>} />
-          <Route path="jobs/create" element={<ProtectedRoute><JobCreate /></ProtectedRoute>} />
-          <Route path="jobs/:id" element={<ProtectedRoute><JobDetail /></ProtectedRoute>} />
-          <Route path="experiences" element={<ProtectedRoute><ExperienceListPage /></ProtectedRoute>} />
-          <Route path="experiences/:id" element={<ProtectedRoute><ExperienceDetailPage /></ProtectedRoute>} />
-          <Route path="resumes" element={<ProtectedRoute><ResumeList /></ProtectedRoute>} />
-          <Route path="resumes/builder" element={<ProtectedRoute><ResumeBuilder /></ProtectedRoute>} />
-          <Route path="resumes/:id" element={<ProtectedRoute><ResumeDetail /></ProtectedRoute>} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            <Route path="jobs" element={<JobList />} />
+            <Route path="jobs/create" element={<JobCreate />} />
+            <Route path="jobs/:id" element={<JobDetail />} />
+            <Route path="experiences" element={<ExperienceListPage />} />
+            <Route path="experiences/:id" element={<ExperienceDetailPage />} />
+            <Route path="resumes" element={<ResumeList />} />
+            <Route path="resumes/builder" element={<ResumeBuilder />} />
+            <Route path="resumes/:id" element={<ResumeDetail />} />
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

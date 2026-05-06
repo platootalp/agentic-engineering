@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useAuthStore } from '@/stores/auth.store'
+import { useAuthStore } from '@/stores/authStore'
 import { jobService } from '@/services/job.service'
 import { useCountUp } from '@/hooks/use-count-up'
 import type { Job } from '@/types/job'

@@ -4,18 +4,19 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 import { Button } from '@/components/ui/button'
-import { useAuthStore } from '@/stores/auth.store'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuthStore } from '@/stores/authStore'
 
 export function Header() {
-  const { user, isAuthenticated } = useAuthStore()
-  const { logout } = useAuth()
+  const user = useAuthStore((s) => s.user)
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const logout = useAuthStore((s) => s.logout)
   const navigate = useNavigate()
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
-  const handleLogout = async () => {
-    await logout()
+  const handleLogout = () => {
+    logout()
+    navigate('/login')
     setMobileMenuOpen(false)
   }
 

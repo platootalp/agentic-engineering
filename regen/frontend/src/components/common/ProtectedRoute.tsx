@@ -1,15 +1,18 @@
+// This component has been migrated to @/router/protected
+// The new ProtectedRoute uses the <Outlet /> pattern from the template standard.
+// If you need the children-based pattern, use this file directly.
 import { Navigate, useLocation } from 'react-router-dom'
-import { useAuthStore } from '@/stores/auth.store'
+import { useAuthStore } from '@/stores/authStore'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
 }
 
 export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAuthStore()
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
+  const isLoading = useAuthStore((s) => s.isLoading)
   const location = useLocation()
 
-  // 如果正在加载认证状态，可以显示加载状态
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -18,12 +21,10 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
     )
   }
 
-  // 如果未认证，重定向到登录页面，并保存当前位置
   if (!isAuthenticated) {
     return <Navigate to="/login" state={{ from: location }} replace />
   }
 
-  // 已认证，渲染子组件
   return <>{children}</>
 }
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Eye, EyeOff, Loader2 } from 'lucide-react'
 
 import { GradientButton } from '@/components/ui/gradient-button'
@@ -15,10 +15,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { loginSchema, type LoginFormData } from '@/lib/validations/auth'
-import { useAuth } from '@/hooks/useAuth'
+import { useAuthStore } from '@/stores/authStore'
 
 export function LoginForm() {
-  const { login, isLoading } = useAuth()
+  const login = useAuthStore((s) => s.login)
+  const isLoading = useAuthStore((s) => s.isLoading)
+  const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -34,6 +36,7 @@ export function LoginForm() {
     try {
       setError(null)
       await login(data)
+      navigate('/dashboard')
     } catch (err: any) {
       const errorMessage = err.response?.data?.detail?.message || 
                           err.response?.data?.detail || 

@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { authService } from './auth.service'
-import apiClient from './api'
+import apiClient from '@/api/client'
 import type { LoginCredentials, RegisterCredentials, User } from '@/types/auth'
 
 // Mock the apiClient
-vi.mock('./api', () => ({
+vi.mock('@/api/client', () => ({
   default: {
     post: vi.fn(),
     get: vi.fn(),
@@ -50,7 +50,7 @@ describe('authService', () => {
 
       const result = await authService.login(credentials)
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/login', credentials)
+      expect(apiClient.post).toHaveBeenCalledWith('/users/login', credentials)
       expect(result.user).toEqual(mockUser)
       expect(result.tokens).toEqual(mockTokens)
     })
@@ -87,7 +87,7 @@ describe('authService', () => {
 
       const result = await authService.register(credentials)
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/register', credentials)
+      expect(apiClient.post).toHaveBeenCalledWith('/users/register', credentials)
       expect(result.user.email).toBe('newuser@example.com')
     })
   })
@@ -98,7 +98,7 @@ describe('authService', () => {
 
       await authService.logout()
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/logout')
+      expect(apiClient.post).toHaveBeenCalledWith('/users/logout')
     })
   })
 
@@ -113,7 +113,7 @@ describe('authService', () => {
 
       const result = await authService.refreshToken(refreshToken)
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/refresh', {
+      expect(apiClient.post).toHaveBeenCalledWith('/users/refresh', {
         refresh_token: refreshToken,
       })
       expect(result.access_token).toBe('new-access-token')
@@ -127,7 +127,7 @@ describe('authService', () => {
 
       const result = await authService.getCurrentUser()
 
-      expect(apiClient.get).toHaveBeenCalledWith('/auth/me')
+      expect(apiClient.get).toHaveBeenCalledWith('/users/me')
       expect(result).toEqual(mockUser)
     })
   })
@@ -139,7 +139,7 @@ describe('authService', () => {
 
       await authService.forgotPassword(email)
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/forgot-password', { email })
+      expect(apiClient.post).toHaveBeenCalledWith('/users/forgot-password', { email })
     })
   })
 
@@ -151,7 +151,7 @@ describe('authService', () => {
 
       await authService.resetPassword(token, newPassword)
 
-      expect(apiClient.post).toHaveBeenCalledWith('/auth/reset-password', {
+      expect(apiClient.post).toHaveBeenCalledWith('/users/reset-password', {
         token,
         new_password: newPassword,
       })

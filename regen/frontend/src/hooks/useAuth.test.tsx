@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, act, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { useAuth } from './useAuth'
-import { useAuthStore } from '@/stores/auth.store'
+import { useAuthStore } from '@/stores/authStore'
 import { authService } from '@/services/auth.service'
 import type { LoginCredentials, RegisterCredentials, User } from '@/types/auth'
 
@@ -227,7 +227,7 @@ describe('useAuth', () => {
       vi.mocked(authService.refreshToken).mockRejectedValueOnce(new Error('Invalid refresh token'))
 
       useAuthStore.getState().setRefreshToken('invalid-token')
-      useAuthStore.getState().login(mockUser, 'old-token', 'invalid-token')
+      useAuthStore.getState().storeLogin(mockUser, 'old-token', 'invalid-token')
 
       const { result } = renderHook(() => useAuth(), { wrapper })
 

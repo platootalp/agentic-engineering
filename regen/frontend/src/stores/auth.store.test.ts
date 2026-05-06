@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { useAuthStore } from './auth.store'
+import { useAuthStore } from './authStore'
 import type { User } from '@/types/auth'
 
 describe('useAuthStore', () => {
@@ -68,26 +68,10 @@ describe('useAuthStore', () => {
     })
   })
 
-  describe('setAuthenticated', () => {
-    it('should set authenticated status correctly', () => {
-      const store = useAuthStore.getState()
-      store.setAuthenticated(true)
-      expect(useAuthStore.getState().isAuthenticated).toBe(true)
-    })
-  })
-
-  describe('setLoading', () => {
-    it('should set loading status correctly', () => {
-      const store = useAuthStore.getState()
-      store.setLoading(true)
-      expect(useAuthStore.getState().isLoading).toBe(true)
-    })
-  })
-
-  describe('login', () => {
+  describe('storeLogin', () => {
     it('should set all auth data correctly', () => {
       const store = useAuthStore.getState()
-      store.login(mockUser, 'access-token', 'refresh-token')
+      store.storeLogin(mockUser, 'access-token', 'refresh-token')
 
       const state = useAuthStore.getState()
       expect(state.user).toEqual(mockUser)
@@ -101,7 +85,7 @@ describe('useAuthStore', () => {
   describe('logout', () => {
     it('should reset all auth data to initial state', () => {
       const store = useAuthStore.getState()
-      store.login(mockUser, 'access-token', 'refresh-token')
+      store.storeLogin(mockUser, 'access-token', 'refresh-token')
       store.logout()
 
       const state = useAuthStore.getState()
