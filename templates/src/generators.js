@@ -44,6 +44,7 @@ function runHygen(generator, action, targetDir, args) {
     generator,
     action,
     ...args,
+    '--force',
   ].join(' ');
 
   try {
