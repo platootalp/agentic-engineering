@@ -1,0 +1,12 @@
+---
+to: "<%= projectName %>/script/deploy.sh"
+---
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Deploying <%= projectName %>..."
+
+cd "$(dirname "$0")/.."
+docker-compose -f docker/docker-compose.prod.yml up -d --build
+
+echo "Deploy complete!"

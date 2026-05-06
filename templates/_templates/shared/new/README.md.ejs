@@ -1,0 +1,42 @@
+---
+to: "<%= projectName %>/README.md"
+---
+# <%= projectName %>
+
+## Tech Stack
+
+- **Frontend:** React + Vite + TypeScript + Tailwind CSS
+- **Backend:** FastAPI + Python
+- **Database:** SQLite (default, switchable to PostgreSQL/MySQL)
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js >= 18
+- Python >= 3.11
+- uv (or poetry)
+
+### Setup
+
+```bash
+# Install frontend dependencies
+cd frontend && npm install
+
+# Install backend dependencies
+cd ../backend && uv sync
+
+# Run development servers
+cd ..
+./script/dev.sh
+```
+
+## Project Structure
+
+See [docs/architecture.md](docs/architecture.md) for details.
+
+## Documentation
+
+- [Architecture](docs/architecture.md)
+- [API Reference](docs/api.md)
+- [Deployment](docs/deployment.md)

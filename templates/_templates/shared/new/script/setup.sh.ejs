@@ -1,0 +1,19 @@
+---
+to: "<%= projectName %>/script/setup.sh"
+---
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "Setting up <%= projectName %>..."
+
+# Frontend
+echo "Installing frontend dependencies..."
+cd "$(dirname "$0")/../frontend"
+npm install
+
+# Backend
+echo "Installing backend dependencies..."
+cd "$(dirname "$0")/../backend"
+uv sync
+
+echo "Setup complete! Run ./script/dev.sh to start development."

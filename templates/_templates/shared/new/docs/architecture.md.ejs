@@ -1,0 +1,56 @@
+---
+to: "<%= projectName %>/docs/architecture.md"
+---
+# <%= projectName %> - Architecture
+
+## Overview
+
+This project uses a **React + FastAPI** stack with domain-modular architecture.
+
+## Frontend
+
+- **Framework:** React 18 + Vite + TypeScript
+- **Styling:** Tailwind CSS
+- **State:** Zustand
+- **Routing:** React Router v6
+
+### Directory Structure
+
+```
+frontend/src/
+├── api/           # API client
+├── assets/        # Static assets
+├── components/    # UI components
+│   ├── ui/        # Base UI library
+│   └── layout/    # Layout components
+├── hooks/         # Custom React hooks
+├── lib/           # Utilities
+├── pages/         # Page components
+├── router/        # Route configuration
+├── stores/        # Zustand stores
+└── types/         # TypeScript types
+```
+
+## Backend
+
+- **Framework:** FastAPI
+- **ORM:** SQLAlchemy 2.0 async
+- **Migrations:** Alembic
+- **Architecture:** Domain-modular
+
+### Directory Structure
+
+```
+backend/app/
+├── core/          # Global infrastructure (config, database, security)
+├── modules/       # Business domain modules
+│   └── {domain}/  # Each domain: router, service, schema, model
+├── middleware/     # Application middleware
+└── main.py        # FastAPI entry point
+```
+
+### Adding a New Domain Module
+
+1. Create `backend/app/modules/{domain}/` with: `router.py`, `service.py`, `schema.py`, `model.py`
+2. Register the router in `backend/app/main.py`
+3. Create an Alembic migration: `cd backend && alembic revision --autogenerate -m "add {domain}"`

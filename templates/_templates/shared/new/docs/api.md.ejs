@@ -1,0 +1,21 @@
+---
+to: "<%= projectName %>/docs/api.md"
+---
+# <%= projectName %> - API Reference
+
+Base URL: `http://localhost:8000`
+
+## Health
+
+| Method | Path | Description |
+|--------|------|-------------|
+| GET | `/api/v1/health` | Health check |
+
+## Authentication
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/v1/users/register` | Register new user |
+| POST | `/api/v1/users/login` | Login and get JWT token |
+
+> Add your API endpoints here as you build them.
