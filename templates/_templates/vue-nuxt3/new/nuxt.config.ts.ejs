@@ -1,0 +1,9 @@
+---
+to: "<%= projectName %>/nuxt.config.ts"
+---
+export default defineNuxtConfig({
+  devtools: { enabled: true },
+  srcDir: 'app/',
+  modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss'],
+  compatibilityDate: '2024-07-16',
+})

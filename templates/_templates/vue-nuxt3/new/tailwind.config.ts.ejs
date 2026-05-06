@@ -1,0 +1,12 @@
+---
+to: "<%= projectName %>/tailwind.config.ts"
+---
+import type { Config } from 'tailwindcss'
+
+export default {
+  content: [
+    './app/**/*.{js,ts,jsx,tsx,vue}',
+  ],
+  theme: { extend: {} },
+  plugins: [],
+} satisfies Config
