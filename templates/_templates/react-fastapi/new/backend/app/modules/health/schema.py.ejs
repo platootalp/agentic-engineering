@@ -1,0 +1,8 @@
+---
+to: "<%= projectName %>/backend/app/modules/health/schema.py"
+---
+from pydantic import BaseModel
+
+
+class HealthResponse(BaseModel):
+    status: str

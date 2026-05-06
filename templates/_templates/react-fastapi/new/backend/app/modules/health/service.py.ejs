@@ -1,0 +1,10 @@
+---
+to: "<%= projectName %>/backend/app/modules/health/service.py"
+---
+from app.modules.health.schema import HealthResponse
+
+
+class HealthService:
+    @staticmethod
+    async def check() -> HealthResponse:
+        return HealthResponse(status="ok")
