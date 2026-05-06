@@ -1,0 +1,16 @@
+---
+to: "<%= projectName %>/docker/Dockerfile.backend"
+---
+FROM python:3.11-slim AS build
+WORKDIR /app
+<% if (pythonPkgManager === 'uv') { %>COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+COPY backend/pyproject.toml .
+RUN uv sync --no-dev --frozen
+COPY backend/ .
+<% } else { %>RUN pip install poetry
+COPY backend/pyproject.toml backend/poetry.lock* ./
+RUN poetry config virtualenvs.create false && poetry install --no-dev --no-interaction
+COPY backend/ .
+<% } %>
+EXPOSE 8000
+<% if (pythonPkgManager === 'uv') { %>CMD ["uv", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]<% } else { %>CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]<% } %>
