@@ -59,37 +59,129 @@ project-name/
 
 ### 1. React + FastAPI
 
+**前端** 遵循 Vite 官方 create-vite React-TS 模板标准，tsconfig 拆分为三个文件。
+
+**后端** 对齐 FastAPI 官方 full-stack-fastapi-template（tiangolo）。
+
 ```
 project-name/
 ├── frontend/
 │   ├── src/
+│   │   ├── api/                   # API 请求封装
+│   │   │   └── client.ts          # axios/fetch 实例与拦截器
+│   │   ├── assets/                # 静态资源（经构建工具处理）
 │   │   ├── components/
-│   │   │   └── ui/              # UI组件库
-│   │   ├── hooks/
-│   │   ├── lib/                 # API client, 工具函数
-│   │   ├── pages/
-│   │   ├── stores/              # Zustand
-│   │   ├── types/
-│   │   ├── App.tsx
-│   │   └── main.tsx
-│   ├── public/
+│   │   │   ├── ui/                # UI 组件库
+│   │   │   └── layout/            # 布局组件（Header, Sidebar 等）
+│   │   ├── hooks/                 # 自定义 React hooks
+│   │   ├── lib/                   # 第三方库封装、工具函数
+│   │   ├── pages/                 # 页面组件
+│   │   ├── router/                # React Router 配置
+│   │   │   └── index.tsx
+│   │   ├── stores/                # Zustand 状态管理
+│   │   ├── types/                 # TypeScript 类型定义
+│   │   ├── App.tsx                # 根组件
+│   │   └── main.tsx               # 入口
+│   ├── public/                    # 不经构建的静态文件
+│   │   └── vite.svg
 │   ├── index.html
 │   ├── vite.config.ts
 │   ├── tailwind.config.ts
-│   ├── tsconfig.json
+│   ├── tsconfig.json              # 基础 TS 配置（引用下方两个）
+│   ├── tsconfig.app.json          # 应用代码 TS 配置
+│   ├── tsconfig.node.json         # 构建脚本 TS 配置
+│   ├── eslint.config.js           # ESLint flat config
 │   └── package.json
 ├── backend/
 │   ├── app/
-│   │   ├── api/v1/
-│   │   ├── core/                # 配置、安全、依赖注入
-│   │   ├── models/              # SQLAlchemy 模型
-│   │   ├── schemas/             # Pydantic schema
-│   │   ├── services/
-│   │   └── main.py
-│   ├── alembic/                 # 数据库迁移
+│   │   ├── api/
+│   │   │   ├── deps.py            # 依赖注入（数据库会话、当前用户等）
+│   │   │   ├── main.py            # API 路由聚合
+│   │   │   └── routes/            # 按功能拆分的路由
+│   │   │       ├── __init__.py
+│   │   │       ├── items.py
+│   │   │       └── users.py
+│   │   ├── core/
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py          # Pydantic Settings 配置
+│   │   │   ├── db.py              # 数据库引擎与会话
+│   │   │   └── security.py        # JWT/密码哈希
+│   │   ├── __init__.py
+│   │   ├── crud.py                # CRUD 操作
+│   │   ├── main.py                # FastAPI 实例与启动
+│   │   ├── models.py              # SQLModel/SQLAlchemy 模型
+│   │   ├── utils.py               # 工具函数
+│   │   └── initial_data.py        # 初始数据填充
+│   ├── alembic/
+│   │   ├── versions/
+│   │   ├── env.py
+│   │   └── alembic.ini (在 backend/ 根)
 │   ├── tests/
-│   ├── pyproject.toml           # uv (默认) 或 poetry
-│   └── Dockerfile
+│   │   ├── api/
+│   │   ├── conftest.py
+│   │   └── utils.py
+│   ├── scripts/
+│   │   ├── prestart.sh
+│   │   └── tests-start.sh
+│   ├── pyproject.toml             # uv (默认) 或 poetry
+│   ├── Dockerfile
+│   └── .dockerignore
+├── docs/
+├── docker/
+│   ├── Dockerfile.frontend
+│   ├── Dockerfile.backend
+│   ├── docker-compose.local.yml
+│   └── docker-compose.prod.yml
+├── script/
+│   ├── setup.sh
+│   ├── dev.sh
+│   └── deploy.sh
+├── .env.example
+├── .gitignore
+└── README.md
+```
+
+### 2. React + Express
+
+**前端** 同 React+FastAPI 的 frontend。
+
+**后端** 遵循 Express + TypeScript 分层架构，Prisma 作为 ORM。
+
+```
+project-name/
+├── frontend/                      # 同 React+FastAPI 的 frontend
+├── backend/
+│   ├── src/
+│   │   ├── config/                # 配置（环境变量、常量）
+│   │   │   └── index.ts
+│   │   ├── controllers/           # 请求处理（调用 service，返回响应）
+│   │   │   ├── auth.controller.ts
+│   │   │   └── user.controller.ts
+│   │   ├── middleware/            # Express 中间件
+│   │   │   ├── auth.ts
+│   │   │   ├── error.ts
+│   │   │   └── validate.ts
+│   │   ├── routes/                # 路由定义
+│   │   │   ├── index.ts
+│   │   │   ├── auth.routes.ts
+│   │   │   └── user.routes.ts
+│   │   ├── services/              # 业务逻辑
+│   │   │   ├── auth.service.ts
+│   │   │   └── user.service.ts
+│   │   ├── types/                 # TypeScript 类型
+│   │   │   └── express.d.ts
+│   │   ├── utils/                 # 工具函数
+│   │   └── index.ts               # Express 入口
+│   ├── prisma/
+│   │   └── schema.prisma
+│   ├── tests/
+│   │   ├── integration/
+│   │   └── unit/
+│   ├── dist/                      # 编译输出（gitignore）
+│   ├── tsconfig.json
+│   ├── package.json
+│   ├── Dockerfile
+│   └── .dockerignore
 ├── docs/
 ├── docker/
 ├── script/
@@ -98,83 +190,93 @@ project-name/
 └── README.md
 ```
 
-### 2. React + Express
-
-```
-project-name/
-├── frontend/                    # 同 React+FastAPI 的 frontend
-├── backend/
-│   ├── src/
-│   │   ├── routes/
-│   │   ├── middleware/          # auth, error, cors
-│   │   ├── models/              # Prisma 模型
-│   │   ├── services/
-│   │   ├── config/
-│   │   ├── types/
-│   │   └── index.ts
-│   ├── prisma/
-│   │   └── schema.prisma
-│   ├── tests/
-│   ├── tsconfig.json
-│   ├── package.json
-│   └── Dockerfile
-├── docs/
-├── docker/
-├── script/
-└── ...
-```
-
 ### 3. React + Next.js
+
+遵循 Next.js 官方 App Router 项目结构。使用 `src/` 目录分离应用代码与配置，私有文件夹 `_components`/`_lib` 防止路由泄露。
 
 ```
 project-name/
 ├── src/
-│   ├── app/                     # Next.js App Router
-│   │   ├── (auth)/
-│   │   ├── api/
-│   │   ├── layout.tsx
-│   │   └── page.tsx
-│   ├── components/ui/
-│   ├── hooks/
-│   ├── lib/
-│   ├── stores/                  # Zustand
-│   └── types/
+│   ├── app/                       # Next.js App Router
+│   │   ├── (auth)/                # 认证路由组（不影响 URL）
+│   │   │   ├── login/
+│   │   │   │   └── page.tsx
+│   │   │   └── layout.tsx
+│   │   ├── (dashboard)/           # 主业务路由组
+│   │   │   ├── _components/       # 私有组件（不参与路由）
+│   │   │   ├── _lib/              # 私有工具（不参与路由）
+│   │   │   ├── page.tsx
+│   │   │   └── layout.tsx
+│   │   ├── api/                   # API Route Handlers
+│   │   │   └── health/
+│   │   │       └── route.ts
+│   │   ├── layout.tsx             # 根布局
+│   │   ├── page.tsx               # 首页
+│   │   ├── not-found.tsx
+│   │   └── error.tsx
+│   ├── components/
+│   │   └── ui/                    # UI 组件库
+│   ├── hooks/                     # 自定义 hooks
+│   ├── lib/                       # 第三方封装、工具函数
+│   ├── stores/                    # Zustand
+│   └── types/                     # TypeScript 类型
 ├── prisma/
 │   └── schema.prisma
+├── public/                        # 不经构建的静态文件
+│   └── favicon.ico
 ├── docs/
 ├── docker/
 ├── script/
-├── next.config.js
+├── middleware.ts                  # Next.js 中间件（认证等）
+├── next.config.ts
 ├── tailwind.config.ts
 ├── tsconfig.json
 ├── package.json
-└── Dockerfile
+└── .env.example
 ```
 
 ### 4. Vue + FastAPI
+
+**前端** 遵循 create-vue 官方模板标准：`views/`（非 `pages/`），独立 `router/` 目录，`assets/` 存放构建资源。
+
+**后端** 同 React+FastAPI 的 backend。
 
 ```
 project-name/
 ├── frontend/
 │   ├── src/
-│   │   ├── components/ui/
-│   │   ├── composables/         # Vue 组合式函数
-│   │   ├── lib/
-│   │   ├── pages/
-│   │   ├── stores/              # Pinia
-│   │   ├── types/
-│   │   ├── App.vue
-│   │   └── main.ts
+│   │   ├── api/                   # API 请求封装
+│   │   │   └── client.ts
+│   │   ├── assets/                # 静态资源（经构建工具处理）
+│   │   │   └── base.css
+│   │   ├── components/
+│   │   │   ├── ui/                # UI 组件库
+│   │   │   └── layout/            # 布局组件
+│   │   ├── composables/           # Vue 组合式函数
+│   │   ├── lib/                   # 第三方封装、工具函数
+│   │   ├── router/                # Vue Router 配置
+│   │   │   └── index.ts
+│   │   ├── stores/                # Pinia
+│   │   ├── types/                 # TypeScript 类型
+│   │   ├── views/                 # 页面组件（create-vue 标准）
+│   │   ├── App.vue                # 根组件
+│   │   └── main.ts                # 入口
+│   ├── public/                    # 不经构建的静态文件
 │   ├── index.html
 │   ├── vite.config.ts
 │   ├── tailwind.config.ts
 │   ├── tsconfig.json
+│   ├── tsconfig.app.json
+│   ├── tsconfig.node.json
+│   ├── eslint.config.js
 │   └── package.json
-├── backend/                     # 同 React+FastAPI 的 backend
+├── backend/                       # 同 React+FastAPI 的 backend
 ├── docs/
 ├── docker/
 ├── script/
-└── ...
+├── .env.example
+├── .gitignore
+└── README.md
 ```
 
 ### 5. Vue + Nuxt 3
@@ -183,26 +285,32 @@ project-name/
 
 ```
 project-name/
-├── app/                          # srcDir: "app/" (Nuxt 4 标准)
-│   ├── assets/                   # 构建工具处理的静态资源
-│   ├── components/ui/            # UI 组件库
-│   ├── composables/              # Vue 组合式函数
-│   ├── layouts/                  # 布局组件
-│   ├── pages/                    # 基于文件的路由
-│   ├── plugins/                  # Vue 插件
-│   ├── stores/                   # Pinia
-│   ├── utils/                    # 工具函数
-│   ├── types/                    # TypeScript 类型
-│   ├── app.vue                   # 根组件
-│   ├── app.config.ts             # 应用运行时配置
-│   └── error.vue                 # 错误页面
-├── server/                       # 服务端代码
-│   ├── api/                      # API 路由
-│   ├── middleware/                # 服务端中间件
-│   ├── plugins/                  # Nitro 插件
-│   └── utils/                    # 服务端工具函数
-├── public/                       # 不经构建处理的静态文件
-├── shared/                       # 前后端共享代码
+├── app/                           # srcDir: "app/" (Nuxt 4 标准)
+│   ├── assets/                    # 构建工具处理的静态资源
+│   ├── components/
+│   │   ├── ui/                    # UI 组件库
+│   │   └── layout/                # 布局组件
+│   ├── composables/               # Vue 组合式函数
+│   ├── layouts/                   # 布局组件
+│   │   └── default.vue
+│   ├── pages/                     # 基于文件的路由
+│   │   └── index.vue
+│   ├── plugins/                   # Vue 插件
+│   ├── stores/                    # Pinia
+│   ├── utils/                     # 工具函数
+│   ├── types/                     # TypeScript 类型
+│   ├── app.vue                    # 根组件
+│   ├── app.config.ts              # 应用运行时配置
+│   └── error.vue                  # 错误页面
+├── server/                        # 服务端代码
+│   ├── api/                       # API 路由
+│   │   └── health.ts
+│   ├── middleware/                 # 服务端中间件
+│   ├── plugins/                   # Nitro 插件
+│   └── utils/                     # 服务端工具函数
+├── public/                        # 不经构建处理的静态文件
+│   └── favicon.ico
+├── shared/                        # 前后端共享代码（类型、工具）
 ├── docs/
 ├── docker/
 ├── script/
