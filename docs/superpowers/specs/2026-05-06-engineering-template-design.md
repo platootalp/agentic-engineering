@@ -179,27 +179,37 @@ project-name/
 
 ### 5. Vue + Nuxt 3
 
+遵循 Nuxt 4 的 `app/` 目录标准（`srcDir: "app/"`），将前端代码与 server/config 分离。
+
 ```
 project-name/
-├── src/
-│   ├── pages/
-│   ├── components/ui/
-│   ├── composables/
-│   ├── stores/                  # Pinia
-│   ├── lib/
-│   ├── types/
-│   └── app.vue
-├── server/
-│   ├── api/
-│   └── middleware/
+├── app/                          # srcDir: "app/" (Nuxt 4 标准)
+│   ├── assets/                   # 构建工具处理的静态资源
+│   ├── components/ui/            # UI 组件库
+│   ├── composables/              # Vue 组合式函数
+│   ├── layouts/                  # 布局组件
+│   ├── pages/                    # 基于文件的路由
+│   ├── plugins/                  # Vue 插件
+│   ├── stores/                   # Pinia
+│   ├── utils/                    # 工具函数
+│   ├── types/                    # TypeScript 类型
+│   ├── app.vue                   # 根组件
+│   ├── app.config.ts             # 应用运行时配置
+│   └── error.vue                 # 错误页面
+├── server/                       # 服务端代码
+│   ├── api/                      # API 路由
+│   ├── middleware/                # 服务端中间件
+│   ├── plugins/                  # Nitro 插件
+│   └── utils/                    # 服务端工具函数
+├── public/                       # 不经构建处理的静态文件
+├── shared/                       # 前后端共享代码
 ├── docs/
 ├── docker/
 ├── script/
 ├── nuxt.config.ts
 ├── tailwind.config.ts
 ├── tsconfig.json
-├── package.json
-└── Dockerfile
+└── package.json
 ```
 
 ## 能力模块
