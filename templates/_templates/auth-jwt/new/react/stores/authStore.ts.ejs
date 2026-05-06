@@ -1,0 +1,41 @@
+---
+to: "<%= projectName %>/frontend/src/stores/authStore.ts"
+---
+import { create } from 'zustand'
+import type { User } from '@/types/auth'
+import apiClient from '@/api/client'
+
+interface AuthState {
+  user: User | null
+  token: string | null
+  isAuthenticated: boolean
+  login: (username: string, password: string) => Promise<void>
+  register: (username: string, email: string, password: string) => Promise<void>
+  logout: () => void
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  token: localStorage.getItem('token'),
+  isAuthenticated: !!localStorage.getItem('token'),
+
+  login: async (username, password) => {
+    const formData = new URLSearchParams()
+    formData.append('username', username)
+    formData.append('password', password)
+    const { data } = await apiClient.post('/v1/users/login', formData, {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    })
+    localStorage.setItem('token', data.access_token)
+    set({ token: data.access_token, isAuthenticated: true })
+  },
+
+  register: async (username, email, password) => {
+    await apiClient.post('/v1/users/register', { username, email, password })
+  },
+
+  logout: () => {
+    localStorage.removeItem('token')
+    set({ user: null, token: null, isAuthenticated: false })
+  },
+}))

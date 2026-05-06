@@ -1,0 +1,38 @@
+---
+to: "<%= projectName %>/backend/tests/modules/users/test_router.py"
+---
+import pytest
+from httpx import AsyncClient
+
+
+@pytest.mark.asyncio
+async def test_register(client: AsyncClient):
+    response = await client.post(
+        "/api/v1/users/register",
+        json={"username": "testuser", "email": "test@example.com", "password": "secret123"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert data["username"] == "testuser"
+
+
+@pytest.mark.asyncio
+async def test_register_duplicate(client: AsyncClient):
+    payload = {"username": "dup", "email": "dup@example.com", "password": "secret123"}
+    await client.post("/api/v1/users/register", json=payload)
+    response = await client.post("/api/v1/users/register", json=payload)
+    assert response.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_login(client: AsyncClient):
+    await client.post(
+        "/api/v1/users/register",
+        json={"username": "loginuser", "email": "login@example.com", "password": "secret123"},
+    )
+    response = await client.post(
+        "/api/v1/users/login",
+        data={"username": "loginuser", "password": "secret123"},
+    )
+    assert response.status_code == 200
+    assert "access_token" in response.json()

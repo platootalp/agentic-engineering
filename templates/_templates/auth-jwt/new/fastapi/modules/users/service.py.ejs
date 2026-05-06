@@ -1,0 +1,38 @@
+---
+to: "<%= projectName %>/backend/app/modules/users/service.py"
+---
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.security import get_password_hash, verify_password, create_access_token
+from app.core.exceptions import AppException
+from app.modules.users.model import User
+from app.modules.users.schema import UserRegister, Token
+
+
+class UserService:
+    @staticmethod
+    async def register(db: AsyncSession, data: UserRegister) -> User:
+        result = await db.execute(select(User).where(User.username == data.username))
+        if result.scalar_one_or_none():
+            raise AppException(status_code=400, detail="Username already registered")
+        result = await db.execute(select(User).where(User.email == data.email))
+        if result.scalar_one_or_none():
+            raise AppException(status_code=400, detail="Email already registered")
+        user = User(
+            username=data.username,
+            email=data.email,
+            hashed_password=get_password_hash(data.password),
+        )
+        db.add(user)
+        await db.commit()
+        await db.refresh(user)
+        return user
+
+    @staticmethod
+    async def login(db: AsyncSession, username: str, password: str) -> Token:
+        result = await db.execute(select(User).where(User.username == username))
+        user = result.scalar_one_or_none()
+        if not user or not verify_password(password, user.hashed_password):
+            raise AppException(status_code=401, detail="Incorrect username or password")
+        access_token = create_access_token(subject=user.username)
+        return Token(access_token=access_token)

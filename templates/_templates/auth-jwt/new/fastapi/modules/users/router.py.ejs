@@ -1,0 +1,22 @@
+---
+to: "<%= projectName %>/backend/app/modules/users/router.py"
+---
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.database import get_db
+from app.modules.users.schema import UserRegister, UserResponse, Token
+from app.modules.users.service import UserService
+
+router = APIRouter()
+
+
+@router.post("/users/register", response_model=UserResponse)
+async def register(data: UserRegister, db: AsyncSession = Depends(get_db)):
+    user = await UserService.register(db, data)
+    return user
+
+
+@router.post("/users/login", response_model=Token)
+async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: AsyncSession = Depends(get_db)):
+    return await UserService.login(db, form_data.username, form_data.password)
