@@ -1,0 +1,11 @@
+---
+to: "<%= projectName %>/backend/src/types/express.d.ts"
+---
+declare namespace Express {
+  interface Request {
+    user?: {
+      sub: string
+      [key: string]: any
+    }
+  }
+}
