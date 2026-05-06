@@ -192,7 +192,7 @@ project-name/
 
 ### 3. React + Next.js
 
-遵循 Next.js 官方 App Router 项目结构。使用 `src/` 目录分离应用代码与配置，私有文件夹 `_components`/`_lib` 防止路由泄露。
+遵循 Next.js 官方 App Router 项目结构。使用 `src/` 目录分离应用代码与配置，私有文件夹 `_components`/`_lib` 防止路由泄露。`src/server/` 存放服务端专用代码。
 
 ```
 project-name/
@@ -218,18 +218,25 @@ project-name/
 │   │   └── ui/                    # UI 组件库
 │   ├── hooks/                     # 自定义 hooks
 │   ├── lib/                       # 第三方封装、工具函数
+│   ├── server/                    # 服务端专用代码
+│   │   ├── db.ts                  # Prisma client 单例
+│   │   ├── auth.ts                # 认证逻辑
+│   │   └── actions/               # Server Actions
 │   ├── stores/                    # Zustand
 │   └── types/                     # TypeScript 类型
 ├── prisma/
-│   └── schema.prisma
-├── public/                        # 不经构建的静态文件
+│   ├── schema.prisma
+│   └── seed.ts                    # 数据填充脚本
+├── public/                        # 不经构建的静态文件（始终在根目录）
 │   └── favicon.ico
 ├── docs/
 ├── docker/
 ├── script/
-├── middleware.ts                  # Next.js 中间件（认证等）
-├── next.config.ts
+├── proxy.ts                       # Next.js 代理/中间件（Next 16+ 命名）
+├── next.config.mjs
+├── postcss.config.mjs
 ├── tailwind.config.ts
+├── eslint.config.mjs
 ├── tsconfig.json
 ├── package.json
 └── .env.example
