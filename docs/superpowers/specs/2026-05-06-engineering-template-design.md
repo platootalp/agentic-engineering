@@ -181,15 +181,17 @@ project-name/
 
 ```
 project-name/
+├── src/
+│   ├── pages/
+│   ├── components/ui/
+│   ├── composables/
+│   ├── stores/                  # Pinia
+│   ├── lib/
+│   ├── types/
+│   └── app.vue
 ├── server/
 │   ├── api/
 │   └── middleware/
-├── pages/
-├── components/ui/
-├── composables/
-├── stores/                      # Pinia
-├── lib/
-├── types/
 ├── docs/
 ├── docker/
 ├── script/
