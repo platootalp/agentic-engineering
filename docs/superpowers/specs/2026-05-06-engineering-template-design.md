@@ -61,7 +61,7 @@ project-name/
 
 **前端** 遵循 Vite 官方 create-vite React-TS 模板标准，tsconfig 拆分为三个文件。
 
-**后端** 对齐 FastAPI 官方 full-stack-fastapi-template（tiangolo）。
+**后端** 采用领域模块化架构：按业务领域（如 users、items）组织，每个领域包含独立的 router、service、schema、model，清晰易扩展。
 
 ```
 project-name/
@@ -94,35 +94,41 @@ project-name/
 │   └── package.json
 ├── backend/
 │   ├── app/
-│   │   ├── api/
-│   │   │   ├── deps.py            # 依赖注入（数据库会话、当前用户等）
-│   │   │   ├── main.py            # API 路由聚合
-│   │   │   └── routes/            # 按功能拆分的路由
-│   │   │       ├── __init__.py
-│   │   │       ├── items.py
-│   │   │       └── users.py
-│   │   ├── core/
+│   │   ├── core/                  # 全局基础设施
 │   │   │   ├── __init__.py
-│   │   │   ├── config.py          # Pydantic Settings 配置
-│   │   │   ├── db.py              # 数据库引擎与会话
-│   │   │   └── security.py        # JWT/密码哈希
+│   │   │   ├── config.py          # Pydantic Settings（环境变量、常量）
+│   │   │   ├── database.py        # 数据库引擎、会话管理
+│   │   │   ├── security.py        # JWT 签发/验证、密码哈希
+│   │   │   ├── dependencies.py    # 全局依赖注入（get_db、get_current_user）
+│   │   │   └── exceptions.py      # 全局异常定义与处理器
+│   │   ├── modules/               # 业务领域模块（按领域组织）
+│   │   │   ├── __init__.py
+│   │   │   └── users/             # 示例：用户领域
+│   │   │       ├── __init__.py
+│   │   │       ├── router.py      # APIRouter 路由定义
+│   │   │       ├── service.py     # 业务逻辑
+│   │   │       ├── schema.py      # Pydantic 请求/响应模型
+│   │   │       └── model.py       # SQLAlchemy/SQLModel ORM 模型
+│   │   ├── middleware/            # 应用级中间件
+│   │   │   ├── __init__.py
+│   │   │   ├── logging.py         # 请求日志
+│   │   │   └── rate_limit.py      # 限流（可选）
 │   │   ├── __init__.py
-│   │   ├── crud.py                # CRUD 操作
-│   │   ├── main.py                # FastAPI 实例与启动
-│   │   ├── models.py              # SQLModel/SQLAlchemy 模型
-│   │   ├── utils.py               # 工具函数
-│   │   └── initial_data.py        # 初始数据填充
+│   │   └── main.py                # FastAPI 实例、注册路由与中间件
 │   ├── alembic/
 │   │   ├── versions/
-│   │   ├── env.py
-│   │   └── alembic.ini (在 backend/ 根)
+│   │   └── env.py
+│   ├── alembic.ini
 │   ├── tests/
-│   │   ├── api/
-│   │   ├── conftest.py
-│   │   └── utils.py
+│   │   ├── conftest.py            # 测试 fixtures（测试数据库、客户端）
+│   │   ├── core/
+│   │   └── modules/
+│   │       └── users/
+│   │           ├── test_router.py
+│   │           └── test_service.py
 │   ├── scripts/
-│   │   ├── prestart.sh
-│   │   └── tests-start.sh
+│   │   ├── prestart.sh            # 容器启动前初始化
+│   │   └── seed.py                # 初始数据填充
 │   ├── pyproject.toml             # uv (默认) 或 poetry
 │   ├── Dockerfile
 │   └── .dockerignore
@@ -335,18 +341,20 @@ project-name/
 
 | 层 | React/Vue 前端 | FastAPI 后端 | Express 后端 | Next.js/Nuxt |
 |---|---|---|---|---|
-| 登录注册页 | Login/Register 组件 | `/api/v1/auth/*` | `/routes/auth.ts` | `app/(auth)/*` 或 `server/api/auth/*` |
-| Token 管理 | Zustand/Pinia store | `core/security.py` | `middleware/auth.ts` | middleware |
-| 路由守卫 | ProtectedRoute 组件 | 依赖注入 | Express 中间件 | Next middleware |
-| 类型 | Auth types | Pydantic schemas | TypeScript types | 同左 |
+| 登录注册页 | Login/Register 组件 | `modules/users/router.py` | `controllers/auth.controller.ts` | `app/(auth)/*` 或 `server/api/auth/*` |
+| Token 管理 | Zustand/Pinia store | `core/security.py` + `core/dependencies.py` | `middleware/auth.ts` | middleware/proxy.ts |
+| 业务逻辑 | - | `modules/users/service.py` | `services/auth.service.ts` | Server Actions |
+| 路由守卫 | ProtectedRoute 组件 | `core/dependencies.py` (get_current_user) | Express 中间件 | middleware/proxy.ts |
+| 数据模型 | Auth types | `modules/users/model.py` + `schema.py` | Prisma schema + types | Prisma schema + types |
 
 ### 数据库层 (db-sqlite / db-postgres / db-mysql)
 
 | 层 | FastAPI | Express / Next.js / Nuxt |
 |---|---|---|
 | ORM | SQLAlchemy 2.0 async | Prisma |
+| 模型 | `modules/{domain}/model.py` | `prisma/schema.prisma` |
 | 迁移 | Alembic | `prisma migrate` |
-| 配置 | `core/database.py` | `lib/db.ts` |
+| 配置 | `core/database.py` | `lib/db.ts` 或 `server/db.ts` |
 | 连接串 | `.env` 中 `DATABASE_URL` | `.env` 中 `DATABASE_URL` |
 
 - **SQLite**: 文件数据库，开箱即用，适合开发阶段
