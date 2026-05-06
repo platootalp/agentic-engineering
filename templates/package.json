@@ -1,0 +1,19 @@
+{
+  "name": "create-project",
+  "version": "0.1.0",
+  "description": "CLI project template generator with composable tech stacks",
+  "type": "module",
+  "bin": {
+    "create-project": "./bin/create-project.js"
+  },
+  "scripts": {
+    "start": "node bin/create-project.js"
+  },
+  "dependencies": {
+    "hygen": "^6.2.11",
+    "inquirer": "^9.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
