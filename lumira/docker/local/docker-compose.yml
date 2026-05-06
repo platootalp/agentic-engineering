@@ -1,0 +1,51 @@
+# ============================================
+# Local Development - Infrastructure Only
+# 本地开发基础设施 - 只包含 PostgreSQL/Redis
+# 前后端在本机直接运行 (npm run dev)
+# ============================================
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin369}
+      POSTGRES_DB: ${POSTGRES_DB:-lumira}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-lumira}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - local
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - local
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  local:
+    driver: bridge

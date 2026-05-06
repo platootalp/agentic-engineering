@@ -1,0 +1,54 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - navigation [ref=e3]:
+      - link "Lumira" [ref=e6] [cursor=pointer]:
+        - /url: /
+        - img [ref=e8]
+        - generic [ref=e14]: Lumira
+    - main [ref=e15]:
+      - generic [ref=e16]:
+        - generic [ref=e17]:
+          - link [ref=e19] [cursor=pointer]:
+            - /url: /
+            - img [ref=e20]
+          - heading "创建账户" [level=3] [ref=e23]
+          - paragraph [ref=e24]: 注册以开始使用 Lumira 管理您的投资组合
+        - generic [ref=e26]:
+          - generic [ref=e27]:
+            - generic [ref=e28]: 姓名
+            - generic [ref=e29]:
+              - img [ref=e30]
+              - textbox "姓名" [active] [ref=e33]:
+                - /placeholder: 您的姓名
+          - generic [ref=e34]:
+            - generic [ref=e35]: 邮箱地址
+            - generic [ref=e36]:
+              - img [ref=e37]
+              - textbox "邮箱地址" [ref=e40]:
+                - /placeholder: your@email.com
+          - generic [ref=e41]:
+            - generic [ref=e42]: 密码
+            - generic [ref=e43]:
+              - img [ref=e44]
+              - textbox "密码" [ref=e47]:
+                - /placeholder: 至少6位字符
+              - button [ref=e48] [cursor=pointer]:
+                - img [ref=e49]
+          - generic [ref=e52]:
+            - generic [ref=e53]: 确认密码
+            - generic [ref=e54]:
+              - img [ref=e55]
+              - textbox "确认密码" [ref=e58]:
+                - /placeholder: 再次输入密码
+              - button [ref=e59] [cursor=pointer]:
+                - img [ref=e60]
+          - button "创建账户" [ref=e63] [cursor=pointer]
+          - generic [ref=e64]:
+            - text: 已有账户？
+            - link "立即登录" [ref=e65] [cursor=pointer]:
+              - /url: /login
+  - alert [ref=e66]
+```

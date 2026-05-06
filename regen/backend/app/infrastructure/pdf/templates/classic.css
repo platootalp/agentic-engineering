@@ -1,0 +1,219 @@
+/* Classic Template - Traditional, serif, black text */
+
+@page {
+    size: A4;
+    margin: 2.5cm 2.5cm 3cm 2.5cm;
+
+    @bottom-center {
+        content: counter(page);
+        font-family: "Times New Roman", "Noto Serif CJK SC", "SimSun", "Songti SC", serif;
+        font-size: 10pt;
+        color: #333;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Times New Roman", "Noto Serif CJK SC", "SimSun", "Songti SC", "STSong", serif;
+    font-size: 11pt;
+    line-height: 1.5;
+    color: #000;
+    margin: 0;
+    padding: 0;
+}
+
+/* Headings */
+h1 {
+    font-size: 24pt;
+    font-weight: normal;
+    color: #000;
+    text-align: center;
+    margin: 0 0 0.8em 0;
+    padding-bottom: 0.4em;
+    border-bottom: 1px solid #000;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-size: 12pt;
+    font-weight: bold;
+    color: #000;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 1.8em 0 0.8em 0;
+    padding-bottom: 0.3em;
+    border-bottom: 1px solid #999;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #000;
+    margin: 1.2em 0 0.5em 0;
+    page-break-after: avoid;
+}
+
+h4, h5, h6 {
+    font-size: 11pt;
+    font-weight: bold;
+    color: #333;
+    margin: 1em 0 0.4em 0;
+    page-break-after: avoid;
+}
+
+/* Paragraphs and text */
+p {
+    margin: 0.7em 0;
+    orphans: 3;
+    widows: 3;
+    text-align: left;
+}
+
+/* Lists */
+ul, ol {
+    margin: 0.7em 0;
+    padding-left: 2em;
+}
+
+li {
+    margin: 0.4em 0;
+}
+
+/* Links */
+a {
+    color: #000;
+    text-decoration: underline;
+}
+
+/* Horizontal rule */
+hr {
+    border: none;
+    border-top: 1px solid #ccc;
+    margin: 1.5em 0;
+}
+
+/* Strong and emphasis */
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+/* Code */
+code {
+    font-family: "Courier New", "Consolas", monospace;
+    font-size: 10pt;
+    background-color: #f5f5f5;
+    padding: 0.1em 0.3em;
+}
+
+pre {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 1em;
+    font-size: 10pt;
+    line-height: 1.4;
+    page-break-inside: avoid;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+}
+
+/* Blockquotes */
+blockquote {
+    margin: 1em 0;
+    padding: 0.5em 1em;
+    border-left: 2px solid #666;
+    color: #333;
+    font-style: italic;
+    page-break-inside: avoid;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0;
+    font-size: 10.5pt;
+    page-break-inside: avoid;
+}
+
+th {
+    border-bottom: 2px solid #000;
+    padding: 0.5em 0.8em;
+    text-align: left;
+    font-weight: bold;
+}
+
+td {
+    border-bottom: 1px solid #ccc;
+    padding: 0.4em 0.8em;
+    vertical-align: top;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+/* Utility classes */
+.page-break {
+    page-break-before: always;
+}
+
+.no-break {
+    page-break-inside: avoid;
+}
+
+.section {
+    margin-bottom: 1.2em;
+}
+
+.contact-info {
+    text-align: center;
+    margin: 1em 0;
+    font-size: 10.5pt;
+}
+
+.contact-info span {
+    margin: 0 0.8em;
+}
+
+/* Experience entry */
+.experience-header {
+    margin-bottom: 0.3em;
+}
+
+.experience-title {
+    font-weight: bold;
+}
+
+.experience-date {
+    float: right;
+    font-style: italic;
+}
+
+.experience-company {
+    font-style: italic;
+    margin-bottom: 0.5em;
+}
+
+/* Education entry */
+.education-entry {
+    margin-bottom: 0.8em;
+}
+
+.education-school {
+    font-weight: bold;
+}
+
+.education-degree {
+    font-style: italic;
+}

@@ -1,0 +1,429 @@
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuthStore } from '@/stores/auth.store'
+import { jobService } from '@/services/job.service'
+import type { Job } from '@/types/job'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import {
+  Briefcase,
+  Plus,
+  FileText,
+  User,
+  Settings,
+  Sparkles,
+  ChevronRight,
+  Loader2,
+  CheckCircle2,
+  Circle,
+  Chrome,
+} from 'lucide-react'
+
+interface Stats {
+  totalJobs: number
+  totalExperiences: number
+  totalResumes: number
+  usageQuota: number
+}
+
+interface QuickAction {
+  title: string
+  description: string
+  icon: React.ReactNode
+  href: string
+  color: string
+  bgColor: string
+}
+
+interface ChecklistItem {
+  id: string
+  label: string
+  completed: boolean
+}
+
+export function DashboardPage() {
+  const { user } = useAuthStore()
+  const [stats, setStats] = useState<Stats>({
+    totalJobs: 0,
+    totalExperiences: 0,
+    totalResumes: 0,
+    usageQuota: 0,
+  })
+  const [recentJobs, setRecentJobs] = useState<Job[]>([])
+  const [loading, setLoading] = useState(true)
+  const [checklist, setChecklist] = useState<ChecklistItem[]>([
+    { id: '1', label: '安装 Chrome 插件', completed: false },
+    { id: '2', label: '添加第一个职位', completed: false },
+    { id: '3', label: '完善个人经历', completed: false },
+    { id: '4', label: '生成第一份简历', completed: false },
+  ])
+
+  const quickActions: QuickAction[] = [
+    {
+      title: '新建职位',
+      description: '添加新的职位信息',
+      icon: <Plus className="h-5 w-5" />,
+      href: '/jobs/create',
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50',
+    },
+    {
+      title: '管理职位',
+      description: '查看和管理所有职位',
+      icon: <Briefcase className="h-5 w-5" />,
+      href: '/jobs',
+      color: 'text-indigo-600',
+      bgColor: 'bg-indigo-50',
+    },
+    {
+      title: '添加经历',
+      description: '完善工作经历和项目',
+      icon: <User className="h-5 w-5" />,
+      href: '/experiences/create',
+      color: 'text-emerald-600',
+      bgColor: 'bg-emerald-50',
+    },
+    {
+      title: '生成简历',
+      description: '基于职位生成定制简历',
+      icon: <FileText className="h-5 w-5" />,
+      href: '/resumes/create',
+      color: 'text-violet-600',
+      bgColor: 'bg-violet-50',
+    },
+    {
+      title: 'Chrome 插件',
+      description: '安装浏览器扩展',
+      icon: <Chrome className="h-5 w-5" />,
+      href: '/extension-guide',
+      color: 'text-orange-600',
+      bgColor: 'bg-orange-50',
+    },
+    {
+      title: '账户设置',
+      description: '管理账户偏好设置',
+      icon: <Settings className="h-5 w-5" />,
+      href: '/settings',
+      color: 'text-slate-600',
+      bgColor: 'bg-slate-50',
+    },
+  ]
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true)
+        // Fetch jobs for stats and recent activity
+        const jobsResponse = await jobService.getJobs({ pageSize: 5 })
+        setStats(prev => ({
+          ...prev,
+          totalJobs: jobsResponse.total,
+        }))
+        setRecentJobs(jobsResponse.data)
+
+        // Update checklist based on data
+        if (jobsResponse.total > 0) {
+          setChecklist(prev =>
+            prev.map(item =>
+              item.id === '2' ? { ...item, completed: true } : item
+            )
+          )
+        }
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchDashboardData()
+  }, [])
+
+  const toggleChecklistItem = (id: string) => {
+    setChecklist(prev =>
+      prev.map(item =>
+        item.id === id ? { ...item, completed: !item.completed } : item
+      )
+    )
+  }
+
+  const completedCount = checklist.filter(item => item.completed).length
+  const progressPercentage = (completedCount / checklist.length) * 100
+
+  return (
+    <div className="container py-8">
+      <div className="space-y-8">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">仪表盘</h1>
+          <p className="text-muted-foreground">
+            欢迎回来，{user?.first_name} {user?.last_name}！
+          </p>
+        </div>
+
+        {/* Stats Overview */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">职位总数</CardTitle>
+              <Briefcase className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {loading ? (
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                ) : (
+                  stats.totalJobs
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">已添加的职位数量</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">经历总数</CardTitle>
+              <User className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {loading ? (
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                ) : (
+                  stats.totalExperiences
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">工作经历和项目</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">简历总数</CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {loading ? (
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                ) : (
+                  stats.totalResumes
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">已生成的简历</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">使用额度</CardTitle>
+              <Sparkles className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {loading ? (
+                  <Loader2 className="h-6 w-6 animate-spin" />
+                ) : (
+                  `${stats.usageQuota}%`
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground">本月额度使用情况</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Quick Actions */}
+        <div>
+          <h2 className="text-lg font-semibold mb-4">快速操作</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {quickActions.map((action, index) => (
+              <Link key={index} to={action.href} className="block">
+                <Card className="h-full cursor-pointer transition-all hover:shadow-md hover:border-primary/50">
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div
+                        className={`${action.bgColor} ${action.color} p-3 rounded-lg`}
+                      >
+                        {action.icon}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-sm">{action.title}</h3>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {action.description}
+                        </p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Recent Activity */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>最近活动</CardTitle>
+                  <CardDescription>您最近添加的职位</CardDescription>
+                </div>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/jobs">查看全部</Link>
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                </div>
+              ) : recentJobs.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Briefcase className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">暂无职位记录</p>
+                  <Button variant="link" size="sm" asChild className="mt-2">
+                    <Link to="/jobs/create">添加第一个职位</Link>
+                  </Button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {recentJobs.map(job => (
+                    <Link
+                      key={job.id}
+                      to={`/jobs/${job.id}`}
+                      className="flex items-center justify-between p-3 rounded-lg hover:bg-muted transition-colors group"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm truncate">
+                          {job.position}
+                        </p>
+                        <p className="text-xs text-muted-foreground truncate">
+                          {job.companyName}
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <span className="text-xs text-muted-foreground">
+                          {new Date(job.createdAt).toLocaleDateString('zh-CN')}
+                        </span>
+                        <ChevronRight className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Getting Started */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>开始使用</CardTitle>
+                  <CardDescription>完成以下步骤开始使用</CardDescription>
+                </div>
+                <div className="text-right">
+                  <span className="text-2xl font-bold text-primary">
+                    {completedCount}
+                  </span>
+                  <span className="text-muted-foreground">/{checklist.length}</span>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Progress Bar */}
+              <div className="w-full bg-muted rounded-full h-2">
+                <div
+                  className="bg-primary h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${progressPercentage}%` }}
+                />
+              </div>
+
+              {/* Checklist */}
+              <div className="space-y-3">
+                {checklist.map(item => (
+                  <button
+                    key={item.id}
+                    onClick={() => toggleChecklistItem(item.id)}
+                    className="flex items-center space-x-3 w-full text-left p-2 rounded-lg hover:bg-muted transition-colors"
+                  >
+                    {item.completed ? (
+                      <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                    ) : (
+                      <Circle className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                    )}
+                    <span
+                      className={`text-sm ${
+                        item.completed
+                          ? 'text-muted-foreground line-through'
+                          : ''
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              {completedCount === checklist.length && (
+                <div className="flex items-center justify-center space-x-2 p-4 bg-primary/10 rounded-lg">
+                  <Sparkles className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-medium text-primary">
+                    恭喜！您已完成所有入门步骤
+                  </span>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* User Info Card */}
+        <Card>
+          <CardHeader>
+            <CardTitle>个人信息</CardTitle>
+            <CardDescription>查看和管理您的个人资料信息</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">
+                  名字
+                </label>
+                <p className="text-lg">{user?.first_name}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">
+                  姓氏
+                </label>
+                <p className="text-lg">{user?.last_name}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">
+                  邮箱
+                </label>
+                <p className="text-lg">{user?.email}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">
+                  用户ID
+                </label>
+                <p className="text-lg font-mono text-sm">{user?.id}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  )
+}
+
+export default DashboardPage

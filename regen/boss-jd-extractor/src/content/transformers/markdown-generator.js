@@ -1,0 +1,158 @@
+/**
+ * @fileoverview Unified markdown generation for all extraction types
+ * Replaces duplicate logic in content.js and background.js
+ */
+
+/**
+ * Generate markdown for detail page extraction
+ * @param {Object} data - Extracted job detail data
+ * @returns {string} Markdown string
+ */
+export function generateDetailMarkdown(data) {
+  let md = `# ${data.jobName || 'Job Title'}\n\n`;
+  md += `## Basic Information\n\n`;
+  md += `- **Company**: ${data.company}\n`;
+  md += `- **Salary**: ${data.salary || 'Negotiable'}\n`;
+  md += `- **Location**: ${data.location || 'Unknown'}\n`;
+  md += `- **Experience**: ${data.experience || 'Any'}\n`;
+  md += `- **Education**: ${data.education || 'Any'}\n`;
+
+  if (data.isAgency) {
+    md += `- **Type**: Agency/Hunting Position (Company name not disclosed)\n`;
+  }
+
+  if (data.companyTags && data.companyTags.length > 0) {
+    md += `- **Company Info**: ${data.companyTags.join(' | ')}\n`;
+  }
+
+  if (data.skillTags && data.skillTags.length > 0 && 
+      data.skillTags[0] !== 'No skill tags extracted') {
+    md += `- **Skills**: ${data.skillTags.slice(0, 10).join(', ')}\n`;
+  }
+
+  if (data.bossName) {
+    md += `- **Recruiter**: ${data.bossName}`;
+    if (data.bossTitle) {
+      md += ` (${data.bossTitle})`;
+    }
+    md += `\n`;
+  }
+
+  if (data.bossActive) {
+    md += `- **Activity**: ${data.bossActive}\n`;
+  }
+
+  md += `- **Link**: ${data.url}\n\n`;
+
+  if (data.jobDescription) {
+    md += `## Job Description\n\n${data.jobDescription}\n\n`;
+  }
+
+  md += `---\n*Extracted by Boss JD Extractor*`;
+  return md;
+}
+
+/**
+ * Generate markdown for list page extraction
+ * @param {Array} jobs - Array of job objects
+ * @param {string} pageUrl - Source page URL
+ * @returns {string} Markdown string
+ */
+export function generateListMarkdown(jobs, pageUrl) {
+  if (!jobs || jobs.length === 0) {
+    return '# Job List\n\nNo jobs found.\n';
+  }
+
+  let md = `# Boss Job List\n\n`;
+  md += `**Source**: ${pageUrl}\n\n`;
+  md += `**Total**: ${jobs.length} jobs\n\n`;
+  md += `---\n\n`;
+
+  jobs.forEach((job, idx) => {
+    md += `## ${idx + 1}. ${job.jobName}\n\n`;
+    md += `- **Company**: ${job.company}\n`;
+    md += `- **Salary**: ${job.salary}\n`;
+    if (job.location) md += `- **Location**: ${job.location}\n`;
+    if (job.experience) md += `- **Experience**: ${job.experience}\n`;
+    if (job.education) md += `- **Education**: ${job.education}\n`;
+    if (job.skillTags && job.skillTags.length > 0) {
+      md += `- **Skills**: ${job.skillTags.slice(0, 8).join(', ')}\n`;
+    }
+    if (job.bossName) {
+      md += `- **Recruiter**: ${job.bossName}`;
+      if (job.bossTitle) {
+        md += ` (${job.bossTitle})`;
+      }
+      md += `\n`;
+    }
+    if (job.url) {
+      md += `- **Link**: ${job.url}\n`;
+    }
+    md += `\n`;
+  });
+
+  md += `---\n*Extracted by Boss JD Extractor*`;
+  return md;
+}
+
+/**
+ * Generate markdown for batch extraction results
+ * @param {Array} results - Array of extraction results with detail data
+ * @param {string} pageUrl - Source page URL
+ * @returns {string} Markdown string
+ */
+export function generateBatchMarkdown(results, pageUrl) {
+  if (!results || results.length === 0) {
+    return '# Extraction Results\n\nNo jobs found\n';
+  }
+
+  const timestamp = new Date().toLocaleString('zh-CN');
+
+  let md = `# Boss Job Extraction Results\n\n`;
+  md += `**Time**: ${timestamp}\n\n`;
+  md += `**Source**: ${pageUrl}\n\n`;
+  md += `**Total**: ${results.length} jobs\n\n`;
+  md += `---\n\n`;
+
+  results.forEach((job, idx) => {
+    const detail = job.detail || {};
+    const company = detail.company || job.company || 'Unknown';
+    const salary = detail.salary || job.salary || 'Negotiable';
+    const location = detail.location || job.location || '';
+    const experience = detail.experience || job.experience || '';
+    const education = detail.education || job.education || '';
+    const skillTags = detail.skillTags || job.skillTags || [];
+    const bossName = detail.bossName || job.bossName || '';
+    const bossTitle = detail.bossTitle || job.bossTitle || '';
+
+    md += `## ${idx + 1}. ${job.jobName}\n\n`;
+    md += `- **Company**: ${company}\n`;
+    md += `- **Salary**: ${salary}\n`;
+    if (location) md += `- **Location**: ${location}\n`;
+    if (experience) md += `- **Experience**: ${experience}\n`;
+    if (education) md += `- **Education**: ${education}\n`;
+    if (skillTags && skillTags.length > 0 && 
+        skillTags[0] !== 'No skill tags extracted') {
+      md += `- **Skills**: ${skillTags.slice(0, 8).join(', ')}\n`;
+    }
+    if (bossName) {
+      md += `- **Recruiter**: ${bossName}`;
+      if (bossTitle) {
+        md += ` (${bossTitle})`;
+      }
+      md += `\n`;
+    }
+    if (job.url) {
+      md += `- **Link**: ${job.url}\n`;
+    }
+
+    if (detail.jobDescription) {
+      md += `\n### Description\n\n${detail.jobDescription}\n`;
+    }
+
+    md += `\n---\n\n`;
+  });
+
+  md += `*Generated by Boss JD Extractor v2.0*`;
+  return md;
+}

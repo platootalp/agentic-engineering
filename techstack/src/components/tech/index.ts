@@ -1,0 +1,1 @@
+export { TechCategoryCard } from './TechCategoryCard'

@@ -1,0 +1,30 @@
+# Lumira Frontend Dockerfile
+# Next.js 14 Application
+
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Set environment variables
+ENV NODE_ENV=production \
+    PORT=3000
+
+# Install curl for healthcheck
+RUN apk add --no-cache curl
+
+# Copy pre-built Next.js application
+COPY package*.json ./
+COPY .next ./.next
+COPY public ./public
+COPY node_modules ./node_modules
+
+# Expose port
+EXPOSE 3000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:3000 || exit 1
+
+# Default command
+CMD ["npm", "start"]

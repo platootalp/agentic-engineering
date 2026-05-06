@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-slot": "^1.2.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.50.0"
+  }
+}

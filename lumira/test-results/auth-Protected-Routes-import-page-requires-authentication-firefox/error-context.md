@@ -1,0 +1,52 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - complementary [ref=e3]:
+      - generic [ref=e4]:
+        - img [ref=e6]
+        - generic [ref=e12]: Lumira
+      - navigation [ref=e13]:
+        - link "资产概览" [ref=e14] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e15]
+          - generic [ref=e20]: 资产概览
+        - link "持仓明细" [ref=e21] [cursor=pointer]:
+          - /url: /holdings
+          - img [ref=e22]
+          - generic [ref=e26]: 持仓明细
+        - link "收益分析" [ref=e27] [cursor=pointer]:
+          - /url: /analysis
+          - img [ref=e28]
+          - generic [ref=e31]: 收益分析
+        - link "定投计划" [ref=e32] [cursor=pointer]:
+          - /url: /sip
+          - img [ref=e33]
+          - generic [ref=e44]: 定投计划
+        - link "基金排行" [ref=e45] [cursor=pointer]:
+          - /url: /rankings
+          - img [ref=e46]
+          - generic [ref=e53]: 基金排行
+        - link "基金对比" [ref=e54] [cursor=pointer]:
+          - /url: /compare
+          - img [ref=e55]
+          - generic [ref=e60]: 基金对比
+        - link "数据导入" [ref=e61] [cursor=pointer]:
+          - /url: /import
+          - img [ref=e62]
+          - generic [ref=e66]: 数据导入
+      - button "收起侧边栏" [ref=e68] [cursor=pointer]:
+        - img [ref=e69]
+        - generic [ref=e72]: 收起侧边栏
+    - generic [ref=e73]:
+      - banner [ref=e74]:
+        - navigation [ref=e77]:
+          - link [ref=e78] [cursor=pointer]:
+            - /url: /dashboard
+            - img [ref=e79]
+          - img [ref=e82]
+          - generic [ref=e84]: 数据导入
+      - main [ref=e85]
+  - alert [ref=e86]
+```

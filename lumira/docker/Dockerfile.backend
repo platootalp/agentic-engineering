@@ -1,0 +1,40 @@
+# Lumira Backend API Dockerfile
+# Express + Prisma + PostgreSQL/Redis
+
+FROM node:20-slim
+
+# Set working directory
+WORKDIR /app
+
+# Set environment variables
+ENV NODE_ENV=production \
+    PORT=3001
+
+# Install system dependencies (OpenSSL required by Prisma)
+RUN apt-get update -y && \
+    apt-get install -y --no-install-recommends \
+        openssl \
+        ca-certificates \
+        curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy dependency files
+COPY lumira-backend/package*.json ./
+COPY lumira-backend/prisma ./prisma
+
+# Install production dependencies and generate Prisma client
+RUN npm ci --only=production && \
+    npx prisma generate
+
+# Copy application code
+COPY lumira-backend/dist ./dist
+
+# Expose port
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:3001/health || exit 1
+
+# Default command
+CMD ["npm", "start"]

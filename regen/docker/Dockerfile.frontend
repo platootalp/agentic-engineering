@@ -1,0 +1,32 @@
+# React Frontend Dockerfile
+# 使用Node.js 20 Alpine镜像作为基础
+FROM node:20-alpine
+
+# 设置工作目录
+WORKDIR /app
+
+# 安装系统依赖（用于某些npm包的原生编译）
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    curl
+
+# 复制package文件
+COPY frontend/package*.json ./
+
+# 安装依赖
+RUN npm ci
+
+# 复制应用代码（开发模式下会被volume覆盖）
+COPY frontend/ ./
+
+# 暴露端口
+EXPOSE 7000
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:7000 || exit 1
+
+# 默认命令（开发模式启用HMR）
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "7000"]

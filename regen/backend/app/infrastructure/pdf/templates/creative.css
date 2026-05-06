@@ -1,0 +1,285 @@
+/* Creative Template - Colorful, modern layout, sans-serif */
+
+@page {
+    size: A4;
+    margin: 1.5cm 1.5cm 2cm 1.5cm;
+
+    @bottom-center {
+        content: counter(page);
+        font-family: "Poppins", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 9pt;
+        color: #fff;
+    }
+
+    @bottom-right {
+        content: "Resume";
+        font-family: "Poppins", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+        font-size: 8pt;
+        color: rgba(255, 255, 255, 0.8);
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", "Noto Sans CJK SC", "PingFang SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    font-size: 10pt;
+    line-height: 1.6;
+    color: #2d3748;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Content wrapper */
+.content-wrapper {
+    background: white;
+    padding: 2cm;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    min-height: 100%;
+}
+
+/* Headings */
+h1 {
+    font-size: 28pt;
+    font-weight: 700;
+    color: #764ba2;
+    margin: 0 0 0.3em 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    page-break-after: avoid;
+}
+
+h2 {
+    font-size: 13pt;
+    font-weight: 600;
+    color: #667eea;
+    margin: 1.8em 0 0.8em 0;
+    padding-left: 0.8em;
+    border-left: 4px solid #764ba2;
+    page-break-after: avoid;
+}
+
+h3 {
+    font-size: 11pt;
+    font-weight: 600;
+    color: #553c9a;
+    margin: 1.2em 0 0.5em 0;
+    page-break-after: avoid;
+}
+
+h4, h5, h6 {
+    font-size: 10.5pt;
+    font-weight: 600;
+    color: #4a5568;
+    margin: 1em 0 0.4em 0;
+    page-break-after: avoid;
+}
+
+/* Paragraphs and text */
+p {
+    margin: 0.6em 0;
+    orphans: 3;
+    widows: 3;
+    color: #4a5568;
+}
+
+/* Lists */
+ul, ol {
+    margin: 0.6em 0;
+    padding-left: 1.5em;
+}
+
+li {
+    margin: 0.35em 0;
+    position: relative;
+}
+
+ul li::marker {
+    color: #764ba2;
+}
+
+/* Links */
+a {
+    color: #764ba2;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Horizontal rule */
+hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    margin: 1.5em 0;
+    border-radius: 1px;
+}
+
+/* Strong and emphasis */
+strong {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+em {
+    font-style: italic;
+    color: #718096;
+}
+
+/* Code */
+code {
+    font-family: "Fira Code", "Consolas", "Monaco", monospace;
+    font-size: 9pt;
+    background-color: #f7fafc;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    color: #553c9a;
+    border: 1px solid #e2e8f0;
+}
+
+pre {
+    background-color: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1em;
+    overflow-x: auto;
+    font-size: 9pt;
+    line-height: 1.5;
+    page-break-inside: avoid;
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border: none;
+}
+
+/* Blockquotes */
+blockquote {
+    margin: 1em 0;
+    padding: 1em 1.2em;
+    border-left: 4px solid #764ba2;
+    background: linear-gradient(90deg, rgba(118, 75, 162, 0.1) 0%, transparent 100%);
+    color: #553c9a;
+    font-style: italic;
+    border-radius: 0 8px 8px 0;
+    page-break-inside: avoid;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 1em 0;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.7em 1em;
+    text-align: left;
+    font-weight: 600;
+}
+
+td {
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.6em 1em;
+    vertical-align: top;
+}
+
+tr:last-child td {
+    border-bottom: none;
+}
+
+tr:nth-child(even) {
+    background-color: #f7fafc;
+}
+
+/* Utility classes */
+.page-break {
+    page-break-before: always;
+}
+
+.no-break {
+    page-break-inside: avoid;
+}
+
+.section {
+    margin-bottom: 1.5em;
+}
+
+.contact-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    margin: 1em 0;
+    padding: 0.8em;
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-radius: 8px;
+    font-size: 9.5pt;
+}
+
+.contact-info span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.contact-info a {
+    color: #764ba2;
+}
+
+/* Skills/tags */
+.skill-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.3em 0.8em;
+    border-radius: 20px;
+    font-size: 8.5pt;
+    font-weight: 500;
+    margin: 0.2em;
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+}
+
+/* Experience entry */
+.experience-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.3em;
+}
+
+.experience-title {
+    font-weight: 600;
+    color: #2d3748;
+}
+
+.experience-date {
+    font-size: 9pt;
+    color: #764ba2;
+    font-weight: 500;
+    background: rgba(118, 75, 162, 0.1);
+    padding: 0.2em 0.6em;
+    border-radius: 12px;
+}
+
+.experience-company {
+    font-size: 10pt;
+    color: #667eea;
+    margin-bottom: 0.5em;
+    font-weight: 500;
+}

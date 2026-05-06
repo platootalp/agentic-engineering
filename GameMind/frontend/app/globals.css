@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0a0a0f;
+  --card: #111118;
+  --border: #1e1e2e;
+  --primary: #3b82f6;
+  --accent: #8b5cf6;
+  --secondary: #1e1e2e;
+  --secondary-foreground: #f1f5f9;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --subtle: #64748b;
+  --ring: #3b82f6;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+}
+
+:root.light {
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --primary: #3b82f6;
+  --accent: #8b5cf6;
+  --secondary: #e2e8f0;
+  --secondary-foreground: #0f172a;
+  --text: #0f172a;
+  --muted: #64748b;
+  --subtle: #94a3b8;
+  --ring: #3b82f6;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+}
+
+.text-blue-400 {
+  color: rgb(96, 165, 250);
+}
+
+.text-green-400 {
+  color: rgb(74, 222, 128);
+}
+
+.text-red-400 {
+  color: rgb(248, 113, 113);
+}
+
+.text-yellow-400 {
+  color: rgb(250, 204, 21);
+}
+
+.text-purple-400 {
+  color: rgb(167, 139, 250);
+}
+
+.text-orange-400 {
+  color: rgb(251, 146, 60);
+}
+
+.light .text-blue-400 {
+  color: rgb(37, 99, 235);
+}
+
+.light .text-green-400 {
+  color: rgb(22, 163, 74);
+}
+
+.light .text-red-400 {
+  color: rgb(220, 38, 38);
+}
+
+.light .text-yellow-400 {
+  color: rgb(202, 138, 4);
+}
+
+.light .text-purple-400 {
+  color: rgb(124, 58, 237);
+}
+
+.light .text-orange-400 {
+  color: rgb(234, 88, 12);
+}
+
+.bg-blue-500\/20 {
+  background-color: rgba(96, 165, 250, 0.2);
+  color: rgb(96, 165, 250);
+}
+
+.bg-green-500\/20 {
+  background-color: rgba(74, 222, 128, 0.2);
+  color: rgb(74, 222, 128);
+}
+
+.bg-red-500\/10 {
+  background-color: rgba(248, 113, 113, 0.1);
+}
+
+.bg-red-500\/20 {
+  background-color: rgba(248, 113, 113, 0.2);
+  color: rgb(248, 113, 113);
+}
+
+.bg-yellow-500\/20 {
+  background-color: rgba(250, 204, 21, 0.2);
+  color: rgb(250, 204, 21);
+}
+
+.bg-purple-500\/20 {
+  background-color: rgba(167, 139, 250, 0.2);
+  color: rgb(167, 139, 250);
+}
+
+.bg-orange-500\/20 {
+  background-color: rgba(251, 146, 60, 0.2);
+  color: rgb(251, 146, 60);
+}
+
+.light .bg-blue-500\/20 {
+  background-color: rgba(37, 99, 235, 0.2);
+  color: rgb(37, 99, 235);
+}
+
+.light .bg-green-500\/20 {
+  background-color: rgba(22, 163, 74, 0.2);
+  color: rgb(22, 163, 74);
+}
+
+.light .bg-red-500\/10 {
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+.light .bg-red-500\/20 {
+  background-color: rgba(220, 38, 38, 0.2);
+  color: rgb(220, 38, 38);
+}
+
+.light .bg-yellow-500\/20 {
+  background-color: rgba(202, 138, 4, 0.2);
+  color: rgb(202, 138, 4);
+}
+
+.light .bg-purple-500\/20 {
+  background-color: rgba(124, 58, 237, 0.2);
+  color: rgb(124, 58, 237);
+}
+
+.light .bg-orange-500\/20 {
+  background-color: rgba(234, 88, 12, 0.2);
+  color: rgb(234, 88, 12);
+}
+
+.fill-yellow-400 {
+  fill: rgb(250, 204, 21);
+}
+
+.light .fill-yellow-400 {
+  fill: rgb(202, 138, 4);
+}
+
+.text-subtle {
+  color: var(--subtle);
+}
+
+.light .text-subtle {
+  color: var(--subtle);
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+* {
+  box-sizing: border-box;
+}

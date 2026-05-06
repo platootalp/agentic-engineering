@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://techstack-panorama.vercel.app/sitemap.xml

@@ -1,0 +1,26 @@
+
+> lumira@0.1.0 dev
+> next dev
+
+   ▲ Next.js 14.1.0
+   - Local:        http://localhost:3000
+   - Environments: .env.local
+
+ ✓ Ready in 2.7s
+ ○ Compiling / ...
+ ✓ Compiled / in 3.3s (1674 modules)
+ ✓ Compiled in 535ms (847 modules)
+ ○ Compiling /register ...
+ ✓ Compiled /register in 1444ms (1682 modules)
+ ✓ Compiled /login in 358ms (1690 modules)
+ ○ Compiling /dashboard ...
+ ✓ Compiled /dashboard in 1608ms (2841 modules)
+ ○ Compiling /holdings ...
+ ✓ Compiled /holdings in 952ms (2865 modules)
+ ○ Compiling /analysis ...
+ ✓ Compiled /analysis in 556ms (2873 modules)
+ ○ Compiling /sip ...
+ ✓ Compiled /sip in 815ms (2887 modules)
+ ✓ Compiled /rankings in 341ms (2899 modules)
+ ✓ Compiled /compare in 269ms (2907 modules)
+ ✓ Compiled /import in 426ms (3012 modules)
