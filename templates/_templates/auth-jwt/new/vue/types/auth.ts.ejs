@@ -1,9 +1,9 @@
 ---
 to: "<%= projectName %>/frontend/src/types/auth.ts"
-skip_if: "<%= frontend !== 'react' || backend === 'nextjs' %>"
+skip_if: "<%= frontend !== 'vue' || backend === 'nuxt3' %>"
 ---
 export interface User {
-  id: string
+  id: number
   username: string
   email: string
 }

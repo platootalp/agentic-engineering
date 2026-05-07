@@ -1,0 +1,48 @@
+---
+to: "<%= projectName %>/frontend/src/views/LoginView.vue"
+skip_if: "<%= frontend !== 'vue' || backend === 'nuxt3' %>"
+---
+<script setup lang="ts">
+import { ref } from 'vue'
+import { useAuth } from '@/composables/useAuth'
+
+const username = ref('')
+const password = ref('')
+const error = ref('')
+const { login } = useAuth()
+
+async function handleSubmit() {
+  error.value = ''
+  try {
+    await login(username.value, password.value)
+  } catch {
+    error.value = 'Invalid credentials'
+  }
+}
+</script>
+
+<template>
+  <div class="min-h-screen flex items-center justify-center">
+    <form @submit.prevent="handleSubmit" class="w-full max-w-sm space-y-4 p-8 bg-white rounded shadow">
+      <h1 class="text-2xl font-bold text-center">Login</h1>
+      <p v-if="error" class="text-red-500 text-sm">{{ error }}</p>
+      <input
+        v-model="username"
+        type="text"
+        placeholder="Username"
+        class="w-full p-2 border rounded"
+        required
+      />
+      <input
+        v-model="password"
+        type="password"
+        placeholder="Password"
+        class="w-full p-2 border rounded"
+        required
+      />
+      <button type="submit" class="w-full p-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        Login
+      </button>
+    </form>
+  </div>
+</template>

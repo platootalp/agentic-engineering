@@ -1,5 +1,6 @@
 ---
 to: "<%= projectName %>/frontend/src/router/protected.tsx"
+skip_if: "<%= frontend !== 'react' || backend === 'nextjs' %>"
 ---
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthStore } from '@/stores/authStore'

@@ -1,4 +1,5 @@
 ---
+skip_if: "<%= backend !== 'fastapi' %>"
 to: "<%= projectName %>/backend/tests/modules/users/test_router.py"
 ---
 import pytest

@@ -1,41 +1,57 @@
 ---
 to: "<%= projectName %>/frontend/src/stores/authStore.ts"
+skip_if: "<%= frontend !== 'react' || backend === 'nextjs' %>"
 ---
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import type { User } from '@/types/auth'
 import apiClient from '@/api/client'
 
 interface AuthState {
   user: User | null
   token: string | null
+  refreshToken: string | null
   isAuthenticated: boolean
   login: (username: string, password: string) => Promise<void>
   register: (username: string, email: string, password: string) => Promise<void>
   logout: () => void
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  user: null,
-  token: localStorage.getItem('token'),
-  isAuthenticated: !!localStorage.getItem('token'),
+export const useAuthStore = create<AuthState>()(
+  persist(
+    (set) => ({
+      user: null,
+      token: null,
+      refreshToken: null,
+      isAuthenticated: false,
 
-  login: async (username, password) => {
-    const formData = new URLSearchParams()
-    formData.append('username', username)
-    formData.append('password', password)
-    const { data } = await apiClient.post('/v1/users/login', formData, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    })
-    localStorage.setItem('token', data.access_token)
-    set({ token: data.access_token, isAuthenticated: true })
-  },
+      login: async (username, password) => {
+        const formData = new URLSearchParams()
+        formData.append('username', username)
+        formData.append('password', password)
+        const { data } = await apiClient.post('/v1/users/login', formData, {
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        })
+        localStorage.setItem('token', data.access_token)
+        if (data.refresh_token) {
+          localStorage.setItem('refreshToken', data.refresh_token)
+        }
+        set({ token: data.access_token, refreshToken: data.refresh_token ?? null, isAuthenticated: true })
+      },
 
-  register: async (username, email, password) => {
-    await apiClient.post('/v1/users/register', { username, email, password })
-  },
+      register: async (username, email, password) => {
+        await apiClient.post('/v1/users/register', { username, email, password })
+      },
 
-  logout: () => {
-    localStorage.removeItem('token')
-    set({ user: null, token: null, isAuthenticated: false })
-  },
-}))
+      logout: () => {
+        localStorage.removeItem('token')
+        localStorage.removeItem('refreshToken')
+        set({ user: null, token: null, refreshToken: null, isAuthenticated: false })
+      },
+    }),
+    {
+      name: 'auth-storage',
+      partialize: (state) => ({ token: state.token, refreshToken: state.refreshToken, isAuthenticated: state.isAuthenticated }),
+    },
+  ),
+)

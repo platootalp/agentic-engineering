@@ -1,5 +1,6 @@
 ---
 to: "<%= projectName %>/frontend/src/pages/LoginPage.tsx"
+skip_if: "<%= frontend !== 'react' || backend === 'nextjs' %>"
 ---
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'

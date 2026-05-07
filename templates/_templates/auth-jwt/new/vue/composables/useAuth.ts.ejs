@@ -1,0 +1,36 @@
+---
+to: "<%= projectName %>/frontend/src/composables/useAuth.ts"
+skip_if: "<%= frontend !== 'vue' || backend === 'nuxt3' %>"
+---
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+
+export function useAuth() {
+  const authStore = useAuthStore()
+  const router = useRouter()
+
+  async function login(username: string, password: string) {
+    try {
+      await authStore.login(username, password)
+      router.push('/')
+    } catch (error) {
+      throw new Error('Invalid credentials')
+    }
+  }
+
+  async function register(username: string, email: string, password: string) {
+    try {
+      await authStore.register(username, email, password)
+      router.push('/login')
+    } catch (error) {
+      throw new Error('Registration failed')
+    }
+  }
+
+  function logout() {
+    authStore.logout()
+    router.push('/login')
+  }
+
+  return { ...authStore, login, register, logout }
+}
