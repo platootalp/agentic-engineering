@@ -1,6 +1,7 @@
 ---
 to: "<%= projectName %>/docker/docker-compose.prod.yml"
 force: true
+skip_if: "<%= backend === 'nextjs' || backend === 'nuxt3' %>"
 ---
 version: "3.8"
 
@@ -26,10 +27,17 @@ services:
       - "8000:8000"
     environment:
       - APP_ENV=production
-      - DATABASE_URL=${DATABASE_URL:-sqlite+aiosqlite:///./<%= projectName %>.db}
-    restart: unless-stopped
-    healthcheck:
+<% if (backend === 'fastapi') { %>      - DATABASE_URL=${DATABASE_URL:-sqlite+aiosqlite:///./<%= projectName %>.db}
+<% } else { %>      - DATABASE_URL=${DATABASE_URL:-file:./<%= projectName %>.db}
+<% } %>    restart: unless-stopped
+<% if (backend === 'fastapi') { %>    healthcheck:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/api/v1/health')"]
       interval: 30s
       timeout: 5s
       retries: 3
+<% } else { %>    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8000/api/v1/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+<% } %>

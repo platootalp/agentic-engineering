@@ -1,6 +1,7 @@
 ---
 to: "<%= projectName %>/frontend/eslint.config.js"
 force: true
+skip_if: "<%= frontend !== 'react' || backend === 'nextjs' %>"
 ---
 import js from '@eslint/js'
 import globals from 'globals'

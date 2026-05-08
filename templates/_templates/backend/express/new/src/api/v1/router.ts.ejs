@@ -1,0 +1,8 @@
+---
+to: "<%= projectName %>/backend/src/api/v1/router.ts"
+---
+import { Router } from 'express'
+import { healthRouter } from './endpoints/health.js'
+
+export const apiRouter = Router()
+apiRouter.use(healthRouter)

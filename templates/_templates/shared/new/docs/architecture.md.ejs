@@ -5,7 +5,7 @@ to: "<%= projectName %>/docs/architecture.md"
 
 ## Overview
 
-This project uses a **React + FastAPI** stack with domain-modular architecture.
+This project uses a **React + FastAPI** stack with layer-based architecture.
 
 ## Frontend
 
@@ -36,21 +36,30 @@ frontend/src/
 - **Framework:** FastAPI
 - **ORM:** SQLAlchemy 2.0 async
 - **Migrations:** Alembic
-- **Architecture:** Domain-modular
+- **Architecture:** Layer-based
 
 ### Directory Structure
 
 ```
 backend/app/
-├── core/          # Global infrastructure (config, database, security)
-├── modules/       # Business domain modules
-│   └── {domain}/  # Each domain: router, service, schema, model
-├── middleware/     # Application middleware
+├── core/          # Global infrastructure (config, database, security, exceptions)
+├── models/        # SQLAlchemy ORM models
+├── schemas/       # Pydantic request/response models
+├── repositories/  # Data access layer
+├── services/      # Business logic
+├── api/v1/        # API routes (v1)
+│   ├── endpoints/ # Route handlers
+│   └── router.py  # Route aggregation
+├── middlewares/   # Application middleware
 └── main.py        # FastAPI entry point
 ```
 
-### Adding a New Domain Module
+### Adding a New Feature
 
-1. Create `backend/app/modules/{domain}/` with: `router.py`, `service.py`, `schema.py`, `model.py`
-2. Register the router in `backend/app/main.py`
-3. Create an Alembic migration: `cd backend && alembic revision --autogenerate -m "add {domain}"`
+1. Create model in `backend/app/models/{entity}.py`
+2. Create schemas in `backend/app/schemas/{entity}.py`
+3. Create repository in `backend/app/repositories/{entity}_repository.py`
+4. Create service in `backend/app/services/{entity}_service.py`
+5. Create endpoint in `backend/app/api/v1/endpoints/{entity}.py`
+6. Register the router in `backend/app/api/v1/router.py`
+7. Create an Alembic migration: `cd backend && alembic revision --autogenerate -m "add {entity}"`

@@ -1,5 +1,6 @@
 ---
 to: "<%= projectName %>/docker/Dockerfile.backend"
+skip_if: "<%= backend !== 'fastapi' %>"
 ---
 FROM python:3.11-slim AS build
 WORKDIR /app

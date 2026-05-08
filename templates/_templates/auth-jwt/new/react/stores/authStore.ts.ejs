@@ -10,7 +10,6 @@ import apiClient from '@/api/client'
 interface AuthState {
   user: User | null
   token: string | null
-  refreshToken: string | null
   isAuthenticated: boolean
   login: (username: string, password: string) => Promise<void>
   register: (username: string, email: string, password: string) => Promise<void>
@@ -22,36 +21,31 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       token: null,
-      refreshToken: null,
       isAuthenticated: false,
 
       login: async (username, password) => {
         const formData = new URLSearchParams()
         formData.append('username', username)
         formData.append('password', password)
-        const { data } = await apiClient.post('/v1/users/login', formData, {
+        const { data } = await apiClient.post('/api/v1/auth/login', formData, {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         })
         localStorage.setItem('token', data.access_token)
-        if (data.refresh_token) {
-          localStorage.setItem('refreshToken', data.refresh_token)
-        }
-        set({ token: data.access_token, refreshToken: data.refresh_token ?? null, isAuthenticated: true })
+        set({ token: data.access_token, isAuthenticated: true })
       },
 
       register: async (username, email, password) => {
-        await apiClient.post('/v1/users/register', { username, email, password })
+        await apiClient.post('/api/v1/auth/register', { username, email, password })
       },
 
       logout: () => {
         localStorage.removeItem('token')
-        localStorage.removeItem('refreshToken')
-        set({ user: null, token: null, refreshToken: null, isAuthenticated: false })
+        set({ user: null, token: null, isAuthenticated: false })
       },
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ token: state.token, refreshToken: state.refreshToken, isAuthenticated: state.isAuthenticated }),
+      partialize: (state) => ({ token: state.token, isAuthenticated: state.isAuthenticated }),
     },
   ),
 )

@@ -1,0 +1,34 @@
+---
+to: "<%= projectName %>/backend/src/middleware/auth.ts"
+---
+import type { Request, Response, NextFunction } from 'express'
+import jwt from 'jsonwebtoken'
+import { env } from '../config/env.js'
+
+export interface AuthPayload {
+  sub: string
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: AuthPayload
+    }
+  }
+}
+
+export function authMiddleware(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization
+  if (!authHeader?.startsWith('Bearer ')) {
+    return res.status(401).json({ detail: 'Missing authorization token' })
+  }
+
+  try {
+    const token = authHeader.slice(7)
+    const payload = jwt.verify(token, env.JWT_SECRET) as AuthPayload
+    req.user = payload
+    next()
+  } catch {
+    res.status(401).json({ detail: 'Invalid or expired token' })
+  }
+}

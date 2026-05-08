@@ -1,12 +1,13 @@
 ---
 to: "<%= projectName %>/docker/docker-compose.local.yml"
 force: true
+skip_if: "<%= backend !== 'fastapi' && backend !== 'express' %>"
 ---
 version: "3.8"
 
 services:
   mysql:
-    image: mysql:8.0
+    image: mysql:8.4
     ports:
       - "3306:3306"
     environment:
@@ -15,11 +16,12 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u root -proot"]
       interval: 5s
       timeout: 5s
       retries: 5
 
+<% if (backend === 'fastapi') { %>
   frontend:
     build:
       context: ../frontend
@@ -32,7 +34,7 @@ services:
     environment:
       - VITE_API_URL=http://localhost:8000
     depends_on:
-      - mysql
+      - backend
 
   backend:
     build:
@@ -44,10 +46,42 @@ services:
       - ../backend:/app
     environment:
       - DATABASE_URL=mysql+aiomysql://root:root@mysql:3306/<%= projectName %>
-    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+<% if (pythonPkgManager === 'uv') { %>    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+<% } else { %>    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+<% } %>    depends_on:
+      mysql:
+        condition: service_healthy
+<% } else if (backend === 'express') { %>
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../docker/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=mysql://root:root@mysql:3306/<%= projectName %>
+    command: npm run dev
     depends_on:
       mysql:
         condition: service_healthy
+<% } %>
 
 volumes:
   mysql_data:

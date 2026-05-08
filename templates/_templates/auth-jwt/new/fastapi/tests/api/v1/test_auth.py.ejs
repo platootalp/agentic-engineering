@@ -1,0 +1,38 @@
+---
+skip_if: "<%= backend !== 'fastapi' %>"
+to: "<%= projectName %>/backend/tests/api/v1/test_auth.py"
+---
+import pytest
+from httpx import AsyncClient
+
+
+@pytest.mark.asyncio
+async def test_register(client: AsyncClient):
+    response = await client.post("/api/v1/auth/register", json={
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "password123",
+    })
+    assert response.status_code == 200
+    data = response.json()
+    assert data["username"] == "testuser"
+    assert data["email"] == "test@example.com"
+
+
+@pytest.mark.asyncio
+async def test_login(client: AsyncClient):
+    # Register first
+    await client.post("/api/v1/auth/register", json={
+        "username": "loginuser",
+        "email": "login@example.com",
+        "password": "password123",
+    })
+    # Login
+    response = await client.post("/api/v1/auth/login", data={
+        "username": "loginuser",
+        "password": "password123",
+    })
+    assert response.status_code == 200
+    data = response.json()
+    assert "access_token" in data
+    assert data["token_type"] == "bearer"

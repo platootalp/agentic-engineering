@@ -1,0 +1,27 @@
+---
+to: "<%= projectName %>/frontend/eslint.config.js"
+force: true
+skip_if: "<%= frontend !== 'vue' || backend === 'nuxt3' %>"
+---
+import js from '@eslint/js'
+import globals from 'globals'
+import pluginVue from 'eslint-plugin-vue'
+import tseslint from 'typescript-eslint'
+import prettier from 'eslint-config-prettier'
+
+export default tseslint.config(
+  { ignores: ['dist'] },
+  ...tseslint.configs.recommended,
+  ...pluginVue.configs['flat/recommended'],
+  prettier,
+  {
+    files: ['**/*.{ts,vue}'],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+      parserOptions: {
+        parser: tseslint.parser,
+      },
+    },
+  },
+)

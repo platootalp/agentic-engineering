@@ -46,6 +46,19 @@ async function main() {
     }
   }
 
+  if (fs.existsSync(backendDir) && answers.backend === 'express') {
+    console.log('  Installing backend dependencies...');
+    execSync('npm install', { cwd: backendDir, stdio: 'inherit' });
+  }
+
+  if (answers.combo === 'react-nextjs' || answers.combo === 'vue-nuxt3') {
+    // Full-stack frameworks install at root level
+    if (fs.existsSync(targetDir) && !fs.existsSync(backendDir)) {
+      console.log('  Installing project dependencies...');
+      execSync('npm install', { cwd: targetDir, stdio: 'inherit' });
+    }
+  }
+
   console.log(`\n  Project "${answers.projectName}" is ready!`);
   console.log(`\n  cd ${answers.projectName}`);
   console.log(`  cat README.md  # for next steps\n`);

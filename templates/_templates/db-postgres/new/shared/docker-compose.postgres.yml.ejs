@@ -1,6 +1,7 @@
 ---
 to: "<%= projectName %>/docker/docker-compose.local.yml"
 force: true
+skip_if: "<%= backend !== 'fastapi' && backend !== 'express' %>"
 ---
 version: "3.8"
 
@@ -21,6 +22,7 @@ services:
       timeout: 5s
       retries: 5
 
+<% if (backend === 'fastapi') { %>
   frontend:
     build:
       context: ../frontend
@@ -33,7 +35,7 @@ services:
     environment:
       - VITE_API_URL=http://localhost:8000
     depends_on:
-      - postgres
+      - backend
 
   backend:
     build:
@@ -45,10 +47,42 @@ services:
       - ../backend:/app
     environment:
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/<%= projectName %>
-    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+<% if (pythonPkgManager === 'uv') { %>    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+<% } else { %>    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+<% } %>    depends_on:
+      postgres:
+        condition: service_healthy
+<% } else if (backend === 'express') { %>
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: ../docker/Dockerfile.frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../docker/Dockerfile.backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/<%= projectName %>
+    command: npm run dev
     depends_on:
       postgres:
         condition: service_healthy
+<% } %>
 
 volumes:
   postgres_data:

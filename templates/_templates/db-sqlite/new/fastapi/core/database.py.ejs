@@ -1,9 +1,9 @@
 ---
 to: "<%= projectName %>/backend/app/core/database.py"
+skip_if: "<%= backend !== 'fastapi' %>"
 force: true
 ---
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from sqlalchemy.orm import DeclarativeBase
 from app.core.config import settings
 
 engine = create_async_engine(
@@ -12,10 +12,6 @@ engine = create_async_engine(
     connect_args={"check_same_thread": False},
 )
 async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
-
-
-class Base(DeclarativeBase):
-    pass
 
 
 async def get_db() -> AsyncSession:

@@ -1,0 +1,12 @@
+---
+to: "<%= projectName %>/backend/app/core/dependencies.py"
+---
+from fastapi import Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.database import get_db
+
+# Add shared dependencies here, e.g.:
+# async def get_current_user(token: str = Depends(oauth2_scheme), db: AsyncSession = Depends(get_db)):
+#     ...
+
+__all__ = ["get_db"]

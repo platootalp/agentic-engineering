@@ -1,6 +1,7 @@
 ---
 to: "<%= projectName %>/backend/pyproject.toml"
 force: true
+skip_if: "<%= backend !== 'fastapi' %>"
 ---
 <% if (pythonPkgManager === 'uv') { %>[project]
 name = "<%= projectName %>-backend"

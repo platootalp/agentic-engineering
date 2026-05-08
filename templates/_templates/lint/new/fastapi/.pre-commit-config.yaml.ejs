@@ -1,5 +1,6 @@
 ---
 to: "<%= projectName %>/backend/.pre-commit-config.yaml"
+skip_if: "<%= backend !== 'fastapi' %>"
 ---
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit

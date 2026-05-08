@@ -1,0 +1,20 @@
+---
+skip_if: "<%= backend !== 'express' %>"
+to: "<%= projectName %>/backend/src/schemas/auth.schema.ts"
+---
+import { z } from 'zod'
+
+export const registerSchema = z.object({
+  username: z.string().min(3).max(50),
+  email: z.string().email(),
+  password: z.string().min(6),
+})
+
+export type RegisterInput = z.infer<typeof registerSchema>
+
+export const loginSchema = z.object({
+  username: z.string(),
+  password: z.string(),
+})
+
+export type LoginInput = z.infer<typeof loginSchema>

@@ -1,0 +1,12 @@
+---
+to: "<%= projectName %>/backend/app/api/v1/endpoints/health.py"
+---
+from fastapi import APIRouter
+from app.schemas.common import Message
+
+router = APIRouter()
+
+
+@router.get("/health", response_model=Message)
+async def health_check():
+    return Message(detail="ok")

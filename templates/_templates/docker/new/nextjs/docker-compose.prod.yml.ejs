@@ -1,0 +1,23 @@
+---
+to: "<%= projectName %>/docker/docker-compose.prod.yml"
+force: true
+skip_if: "<%= backend !== 'nextjs' %>"
+---
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=${DATABASE_URL:-file:./<%= projectName %>.db}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

@@ -1,5 +1,6 @@
 ---
 to: "<%= projectName %>/docker/Dockerfile.frontend"
+skip_if: "<%= backend === 'nextjs' || backend === 'nuxt3' %>"
 ---
 FROM node:20-alpine AS build
 WORKDIR /app

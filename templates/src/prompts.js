@@ -85,13 +85,18 @@ export async function runPrompts() {
         { name: 'Authentication (JWT)', value: 'auth-jwt', checked: true },
         { name: 'Docker', value: 'docker', checked: true },
         { name: 'Code Standards (Lint)', value: 'lint', checked: true },
-        { name: 'Initial DB Migration', value: 'db-migration', checked: false },
       ],
     },
   ]);
 
   answers.pythonPkgManager = answers.pythonPkgManager || 'uv';
   answers.combo = `${answers.frontend}-${answers.backend}`;
+
+  // Auto-include db capability based on database choice
+  const dbCapability = `db-${answers.database}`;
+  if (!answers.capabilities.includes(dbCapability)) {
+    answers.capabilities.push(dbCapability);
+  }
 
   return answers;
 }

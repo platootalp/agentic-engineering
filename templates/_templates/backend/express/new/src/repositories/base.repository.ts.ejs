@@ -1,0 +1,15 @@
+---
+to: "<%= projectName %>/backend/src/repositories/base.repository.ts"
+---
+import { PrismaClient } from '@prisma/client'
+import { prisma } from '../config/database.js'
+
+export abstract class BaseRepository<T> {
+  protected prisma: PrismaClient
+  protected model: keyof PrismaClient
+
+  constructor(model: keyof PrismaClient) {
+    this.prisma = prisma
+    this.model = model
+  }
+}

@@ -1,0 +1,11 @@
+---
+to: "<%= projectName %>/frontend/.prettierrc"
+skip_if: "<%= frontend !== 'vue' || backend === 'nuxt3' %>"
+---
+{
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "printWidth": 100,
+  "tabWidth": 2
+}

@@ -1,0 +1,17 @@
+---
+to: "<%= projectName %>/backend/src/schemas/common.schema.ts"
+---
+import { z } from 'zod'
+
+export const messageSchema = z.object({
+  detail: z.string(),
+})
+
+export type Message = z.infer<typeof messageSchema>
+
+export const paginationSchema = z.object({
+  page: z.number().int().positive().default(1),
+  size: z.number().int().positive().max(100).default(20),
+})
+
+export type Pagination = z.infer<typeof paginationSchema>

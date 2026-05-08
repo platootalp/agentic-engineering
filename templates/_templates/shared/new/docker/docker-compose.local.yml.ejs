@@ -1,5 +1,6 @@
 ---
 to: "<%= projectName %>/docker/docker-compose.local.yml"
+skip_if: "<%= backend === 'nextjs' || backend === 'nuxt3' %>"
 ---
 version: "3.8"
 
@@ -24,6 +25,14 @@ services:
       - "8000:8000"
     volumes:
       - ../backend:/app
+<% if (backend === 'fastapi') { %><% if (pythonPkgManager === 'uv') { %>      - /app/.venv
+<% } %>
     environment:
-      - DATABASE_URL=sqlite:///./<%= projectName %>.db
-    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      - DATABASE_URL=sqlite+aiosqlite:///./<%= projectName %>.db
+<% if (pythonPkgManager === 'uv') { %>    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+<% } else { %>    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+<% } %><% } else if (backend === 'express') { %>      - /app/node_modules
+    environment:
+      - DATABASE_URL=file:./<%= projectName %>.db
+    command: npm run dev
+<% } %>
